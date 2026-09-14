@@ -1,4 +1,4 @@
-import { ArrowUpRight, Github, Linkedin, Mail } from 'lucide-react'
+import { ArrowUpRight, Mail } from 'lucide-react'
 
 import { CustomCursor } from './components/CustomCursor'
 import { Hero } from './components/Hero'
@@ -188,7 +188,7 @@ function App() {
                   rel="noreferrer"
                   aria-label="GitHub"
                 >
-                  <Github size={19} />
+                  <span className="social-symbol">GH</span>
                   GitHub
                 </a>
 
@@ -198,7 +198,7 @@ function App() {
                   rel="noreferrer"
                   aria-label="LinkedIn"
                 >
-                  <Linkedin size={19} />
+                  <span className="social-symbol">LI</span>
                   LinkedIn
                 </a>
 

@@ -5,7 +5,7 @@ export function Hero() {
   return (
     <section id="top" className="hero">
       <div className="hero-background-word">
-        SOFTWARE
+        DERIN💙
       </div>
 
       <div className="hero-copy hero-copy-left">
@@ -27,8 +27,8 @@ export function Hero() {
 
       <div className="hero-visual">
         <ImageReveal
-          baseImage="/images/israel.jpg"
-          revealImage="/images/ironman.jpg"
+          baseImage="/images/green.jpeg"
+          revealImage="/images/spidey.jpg"
         />
       </div>
 

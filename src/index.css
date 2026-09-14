@@ -1260,3 +1260,17 @@ img {
     animation-iteration-count: 1 !important;
   }
 }
+.social-symbol {
+  width: 19px;
+  height: 19px;
+
+  display: inline-grid;
+  place-items: center;
+
+  border: 1px solid currentColor;
+  border-radius: 50%;
+
+  font-family: 'DM Mono', monospace;
+  font-size: 6px;
+  line-height: 1;
+}
