@@ -1,224 +1,528 @@
-import { ArrowUpRight, Mail } from 'lucide-react'
-
+import { useEffect, useState } from 'react'
+import { ArrowUpRight, Menu, X } from 'lucide-react'
+import Hero from './components/Hero'
 import { CustomCursor } from './components/CustomCursor'
-import { Hero } from './components/Hero'
-import { Navigation } from './components/Navigation'
-import { ProjectCard } from './components/ProjectCard'
-import { SectionHeading } from './components/SectionHeading'
-import { projects } from './data/projects'
+
+const navItems = [
+  { label: 'Work', href: '#work' },
+  { label: 'Systems', href: '#systems' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
+]
+
+const supportingProjects = [
+  {
+    number: '04',
+    title: 'Payment Service',
+    category: 'BACKEND SYSTEM',
+    description:
+      'A payment service built around initialization, verification, webhooks and asynchronous post-payment processing.',
+    stack: ['FastAPI', 'PostgreSQL', 'Paystack', 'Redis', 'Celery'],
+  },
+  {
+    number: '05',
+    title: 'Authentication Service',
+    category: 'BACKEND SYSTEM',
+    description:
+      'Token-based authentication with access and refresh flows, OAuth2 and PostgreSQL-backed user management.',
+    stack: ['FastAPI', 'JWT', 'OAuth2', 'PostgreSQL'],
+  },
+  {
+    number: '06',
+    title: 'Notification Service',
+    category: 'ASYNC SYSTEM',
+    description:
+      'An asynchronous email delivery service using queued background work instead of making the API wait on delivery.',
+    stack: ['FastAPI', 'Celery', 'Redis', 'SMTP'],
+  },
+  {
+    number: '07',
+    title: 'Neural Network From Scratch',
+    category: 'MACHINE LEARNING',
+    description:
+      'A neural network implemented from first principles with NumPy, including forward propagation, backpropagation and softmax classification.',
+    stack: ['Python', 'NumPy', 'MNIST', 'Backpropagation'],
+  },
+  {
+    number: '08',
+    title: 'Customer Churn Prediction',
+    category: 'MACHINE LEARNING',
+    description:
+      'An end-to-end machine learning pipeline covering preprocessing, feature engineering, evaluation and deployment.',
+    stack: ['Python', 'Pandas', 'Scikit-learn', 'Streamlit'],
+  },
+  {
+    number: '09',
+    title: 'URL Shortener',
+    category: 'BACKEND',
+    description:
+      'A REST API for short-link generation, redirects and click analytics backed by PostgreSQL.',
+    stack: ['FastAPI', 'PostgreSQL', 'REST API'],
+  },
+]
+
+function ProjectVideo({
+  src,
+  label,
+}: {
+  src: string
+  label: string
+}) {
+  return (
+    <div className="project-video-wrap">
+      <div className="project-video-top">
+        <span>LIVE PRODUCT CAPTURE</span>
+        <span>{label}</span>
+      </div>
+
+      <div className="project-video">
+        <video
+          src={src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+
+        <div className="project-video-shade" />
+        <div className="project-video-corner project-video-corner-tl" />
+        <div className="project-video-corner project-video-corner-br" />
+
+        <div className="project-video-status">
+          <span />
+          LIVE DEMO
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function App() {
-  const featuredProjects = projects.filter(
-    (project) => project.featured,
-  )
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40)
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const closeMenu = () => setMenuOpen(false)
 
   return (
-    <>
+    <div className="site">
       <CustomCursor />
 
-      <Navigation />
+      <header className={`nav ${scrolled ? 'nav-scrolled' : ''}`}>
+        <a href="#" className="nav-brand" onClick={closeMenu}>
+          <span className="nav-index">01</span>
+          <span>ISRAEL ADEOTI</span>
+        </a>
+
+        <nav className={`nav-links ${menuOpen ? 'nav-links-open' : ''}`}>
+          {navItems.map((item, index) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={closeMenu}
+              className="nav-link"
+            >
+              <span>0{index + 1}</span>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="nav-right">
+          <span className="availability">
+            <i />
+            Available
+          </span>
+
+          <button
+            className="menu-button"
+            type="button"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
+      </header>
 
       <main>
         <Hero />
 
-        <section id="work" className="section work-section">
-          <div className="container">
-            <SectionHeading
-              eyebrow="Selected work"
-              title="Things I’ve built."
-              description="A selection of systems, products and experiments across backend engineering, artificial intelligence and full-stack development."
-            />
-
-            <div className="projects">
-              {featuredProjects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                />
-              ))}
-            </div>
+        <section className="work-section" id="work">
+          <div className="section-meta">
+            <span>02</span>
+            <span>Selected work</span>
           </div>
-        </section>
 
-        <section id="about" className="section about-section">
-          <div className="container">
-            <SectionHeading
-              eyebrow="About"
-              title="I like building things that actually do something."
-            />
-
-            <div className="about-grid">
-              <div className="about-statement">
-                <p>
-                  I’m a developer focused on the intersection
-                  of backend engineering and AI.
-                </p>
-
-                <p>
-                  My work usually starts with a problem,
-                  then moves through data, APIs, models and
-                  interfaces until the whole thing becomes a
-                  usable product.
-                </p>
-
-                <p>
-                  I’m especially interested in systems that
-                  feel thoughtful under the surface — reliable
-                  backends, useful AI, and interfaces that stay
-                  out of the way.
-                </p>
-              </div>
-
-              <div className="about-details">
-                <div className="detail">
-                  <span>Currently</span>
-                  <strong>
-                    Building software & AI systems
-                  </strong>
-                </div>
-
-                <div className="detail">
-                  <span>Based in</span>
-                  <strong>Lagos, Nigeria</strong>
-                </div>
-
-                <div className="detail">
-                  <span>Education</span>
-                  <strong>
-                    B.Sc. Statistics · UNILAG
-                  </strong>
-                </div>
-
-                <div className="detail">
-                  <span>Focus</span>
-                  <strong>
-                    Backend · AI · Full-stack
-                  </strong>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="section capabilities-section">
-          <div className="container">
-            <SectionHeading
-              eyebrow="Capabilities"
-              title="What I work with."
-            />
-
-            <div className="capabilities">
-              <div className="capability">
-                <span>01</span>
-
-                <h3>Backend</h3>
-
-                <p>
-                  APIs, databases, authentication,
-                  services and the infrastructure that
-                  makes products work.
-                </p>
-
-                <div className="capability-stack">
-                  Python · FastAPI · PostgreSQL · REST ·
-                  JWT · Docker
-                </div>
-              </div>
-
-              <div className="capability">
-                <span>02</span>
-
-                <h3>AI / ML</h3>
-
-                <p>
-                  Retrieval systems, machine learning,
-                  local models and intelligent product
-                  experiences.
-                </p>
-
-                <div className="capability-stack">
-                  Python · NumPy · RAG · FAISS · BM25 ·
-                  Ollama
-                </div>
-              </div>
-
-              <div className="capability">
-                <span>03</span>
-
-                <h3>Full-stack</h3>
-
-                <p>
-                  Interfaces connected to real systems,
-                  with an emphasis on clean architecture
-                  and useful interactions.
-                </p>
-
-                <div className="capability-stack">
-                  React · TypeScript · Vite · Three.js ·
-                  Tauri
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="contact" className="contact-section">
-          <div className="container">
-            <p className="eyebrow">Have something in mind?</p>
+          <div className="work-intro">
+            <p className="eyebrow">Built, not imagined.</p>
 
             <h2>
-              Let’s build
+              The work is
               <br />
-              something <em>good.</em>
+              <em>the proof.</em>
             </h2>
 
-            <a
-              href="mailto:adeotiisrael93@gmail.com"
-              className="contact-email"
-            >
-              adeotiisrael93@gmail.com
-              <ArrowUpRight size={24} />
-            </a>
+            <p>
+              A few systems I've built across backend engineering, machine
+              learning and AI. The demos below are actual product captures,
+              not mockups.
+            </p>
+          </div>
 
-            <div className="contact-bottom">
-              <div className="socials">
+          <div className="flagship-projects">
+            <article className="flagship-project flagship-project-featured">
+              <div className="project-heading">
+                <div className="project-index">01</div>
+
+                <div>
+                  <p className="project-category">FULL-STACK / DATA SYSTEM</p>
+                  <h3>Price Universe</h3>
+                </div>
+
+                <span className="project-state">SELECTED</span>
+              </div>
+
+              <ProjectVideo
+                src="/videos/price-universe.mp4"
+                label="PRICE INTELLIGENCE"
+              />
+
+              <div className="project-detail-grid">
+                <div>
+                  <p className="detail-label">THE IDEA</p>
+                  <p className="detail-copy">
+                    Product prices across Nigerian e-commerce stores are
+                    difficult to compare consistently. Price Universe turns
+                    that problem into a searchable product intelligence
+                    system.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="detail-label">THE SYSTEM</p>
+                  <div className="architecture-line">
+                    <span>SCRAPERS</span>
+                    <b>→</b>
+                    <span>FASTAPI</span>
+                    <b>→</b>
+                    <span>CELERY</span>
+                    <b>→</b>
+                    <span>POSTGRES</span>
+                    <b>→</b>
+                    <span>REACT</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="project-footer">
+                <div className="project-stack">
+                  {[
+                    'Python',
+                    'FastAPI',
+                    'PostgreSQL',
+                    'Redis',
+                    'Celery',
+                    'React',
+                    'React Three Fiber',
+                  ].map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+
+                <a
+                  className="project-link"
+                  href="https://github.com/oluwaisrael/ecommerce-price"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  VIEW SOURCE
+                  <ArrowUpRight size={16} />
+                </a>
+              </div>
+            </article>
+
+            <article className="flagship-project">
+              <div className="project-heading">
+                <div className="project-index">02</div>
+
+                <div>
+                  <p className="project-category">AI / INFORMATION RETRIEVAL</p>
+                  <h3>UniRAG</h3>
+                </div>
+
+                <span className="project-state">SELECTED</span>
+              </div>
+
+              <ProjectVideo
+                src="/videos/unirag.mp4"
+                label="RAG COURSE ASSISTANT"
+              />
+
+              <div className="project-detail-grid">
+                <div>
+                  <p className="detail-label">THE IDEA</p>
+                  <p className="detail-copy">
+                    Course material in. Answers out. UniRAG combines semantic
+                    and lexical retrieval so the model can reason over the
+                    right parts of the source material.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="detail-label">THE SYSTEM</p>
+                  <div className="architecture-line">
+                    <span>PDF</span>
+                    <b>→</b>
+                    <span>FAISS</span>
+                    <b>+</b>
+                    <span>BM25</span>
+                    <b>→</b>
+                    <span>GEMINI</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="project-footer">
+                <div className="project-stack">
+                  {[
+                    'Python',
+                    'Gemini',
+                    'FAISS',
+                    'BM25',
+                    'Sentence Transformers',
+                    'Streamlit',
+                  ].map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+
+                <a
+                  className="project-link"
+                  href="https://github.com/oluwaisrael/rag-course-app"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  VIEW SOURCE
+                  <ArrowUpRight size={16} />
+                </a>
+              </div>
+            </article>
+
+            <article className="flagship-project flagship-project-lael">
+              <div className="project-heading">
+                <div className="project-index">03</div>
+
+                <div>
+                  <p className="project-category">NATIVE AI / SYSTEMS</p>
+                  <h3>Lael</h3>
+                </div>
+
+                <span className="project-state project-state-building">
+                  BUILDING
+                </span>
+              </div>
+
+              <ProjectVideo
+                src="/videos/lael.mp4"
+                label="PERSONAL INTELLIGENCE"
+              />
+
+              <div className="project-detail-grid">
+                <div>
+                  <p className="detail-label">THE IDEA</p>
+                  <p className="detail-copy">
+                    A personal intelligence system designed to live on the
+                    desktop rather than inside a browser tab. Voice,
+                    cognition, memory and local models come together as one
+                    system presence.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="detail-label">THE SYSTEM</p>
+                  <div className="architecture-line architecture-lael">
+                    <span>WHISPER</span>
+                    <b>→</b>
+                    <span>COGNITION</span>
+                    <b>→</b>
+                    <span>MEMORY</span>
+                    <b>→</b>
+                    <span>QWEN</span>
+                    <b>→</b>
+                    <span>TAURI</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="project-footer">
+                <div className="project-stack">
+                  {[
+                    'Tauri 2',
+                    'React',
+                    'TypeScript',
+                    'Rust',
+                    'Whisper',
+                    'Ollama',
+                    'Qwen 2.5',
+                    'Three.js',
+                  ].map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section className="systems-section" id="systems">
+          <div className="section-meta">
+            <span>03</span>
+            <span>Engineering work</span>
+          </div>
+
+          <div className="systems-intro">
+            <p className="eyebrow">Beyond the flagship projects</p>
+            <h2>
+              Smaller systems.
+              <br />
+              <em>Same obsession.</em>
+            </h2>
+          </div>
+
+          <div className="supporting-projects">
+            {supportingProjects.map((project) => (
+              <article className="supporting-project" key={project.number}>
+                <div className="supporting-number">{project.number}</div>
+
+                <div className="supporting-main">
+                  <p>{project.category}</p>
+                  <h3>{project.title}</h3>
+                  <span>{project.description}</span>
+                </div>
+
+                <div className="supporting-stack">
+                  {project.stack.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+
+                <ArrowUpRight className="supporting-arrow" size={20} />
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="about-section" id="about">
+          <div className="section-meta">
+            <span>04</span>
+            <span>About</span>
+          </div>
+
+          <div className="about-layout">
+            <p className="eyebrow">A little context</p>
+
+            <div>
+              <h2>
+                Statistics taught me to
+                <br />
+                <em>look for the signal.</em>
+              </h2>
+
+              <p className="about-copy">
+                I study Statistics at the University of Lagos and build
+                software around the things I keep wanting to understand:
+                data, intelligent systems and what happens underneath the
+                interface.
+              </p>
+
+              <p className="about-copy">
+                That has taken me from machine learning and retrieval systems
+                to APIs, distributed jobs, payments and native desktop
+                software.
+              </p>
+            </div>
+          </div>
+
+                      <div className="about-signal">
+              <span>STATISTICS</span>
+              <b>→</b>
+              <span>DATA</span>
+              <b>→</b>
+              <span>ML</span>
+              <b>→</b>
+              <span>AI</span>
+              <b>→</b>
+              <span>SOFTWARE</span>
+              <b>→</b>
+              <span>SYSTEMS</span>
+            </div>
+          </section>
+
+          <section className="contact-section" id="contact">
+            <div className="section-meta">
+              <span>05</span>
+              <span>Contact</span>
+            </div>
+
+            <div className="contact-layout">
+              <div>
+                <p className="eyebrow">Have something worth building?</p>
+                <h2>
+                  Let’s make
+                  <br />
+                  <em>something real.</em>
+                </h2>
+              </div>
+
+              <div className="contact-actions">
+                <a
+                  href="mailto:adeotiisrael93@gmail.com"
+                  className="contact-link"
+                >
+                  <span>adeotiisrael93@gmail.com</span>
+                  <ArrowUpRight size={20} />
+                </a>
+
                 <a
                   href="https://github.com/oluwaisrael"
                   target="_blank"
                   rel="noreferrer"
-                  aria-label="GitHub"
+                  className="contact-link"
                 >
-                  <span className="social-symbol">GH</span>
-                  GitHub
+                  <span>GitHub</span>
+                  <ArrowUpRight size={20} />
                 </a>
 
                 <a
-                  href="https://linkedin.com/in/adeoti-israel-a10503262/"
+                  href="https://linkedin.com/in/adeoti-israel-a10503262"
                   target="_blank"
                   rel="noreferrer"
-                  aria-label="LinkedIn"
+                  className="contact-link"
                 >
-                  <span className="social-symbol">LI</span>
-                  LinkedIn
-                </a>
-
-                <a
-                  href="mailto:adeotiisrael93@gmail.com"
-                  aria-label="Email"
-                >
-                  <Mail size={19} />
-                  Email
+                  <span>LinkedIn</span>
+                  <ArrowUpRight size={20} />
                 </a>
               </div>
-
-              <span>
-                Designed & built by Israel Adeoti
-              </span>
             </div>
-          </div>
-        </section>
-      </main>
-    </>
+          </section>
+        </main>
+
+        <footer className="site-footer">
+          <span>© 2026 ADEOTI ISRAEL</span>
+          <span>SOFTWARE / AI / SYSTEMS</span>
+          <span>LAGOS, NG</span>
+        </footer>
+      </div>
   )
 }
 

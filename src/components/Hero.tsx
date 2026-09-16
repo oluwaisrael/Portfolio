@@ -1,62 +1,70 @@
-import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
+import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import { ImageReveal } from './ImageReveal'
 
-export function Hero() {
+function Hero() {
   return (
-    <section id="top" className="hero">
-      <div className="hero-background-word">
-        DERIN💙
+    <section className="hero">
+      <div className="hero-noise" />
+
+      <div className="hero-topline">
+        <span>SOFTWARE / AI / SYSTEMS</span>
+        <span>06—26 / 09—26</span>s
       </div>
 
-      <div className="hero-copy hero-copy-left">
-        <p className="eyebrow">
-          BACKEND · AI · FULL-STACK
-        </p>
+      <div className="hero-stage">
+        <div className="hero-background-word">ADEOTI</div>
 
-        <h1>
-          Israel
-          <br />
-          Adeoti<span>.</span>
-        </h1>
-
-        <p className="hero-description">
-          I build intelligent systems and the software
-          around them.
-        </p>
-      </div>
-
-      <div className="hero-visual">
-        <ImageReveal
-          baseImage="/images/green.jpeg"
-          revealImage="/images/spidey.jpg"
-        />
-      </div>
-
-      <div className="hero-copy hero-copy-right">
-        <div className="hero-location">
-          <span>LAGOS, NIGERIA</span>
-          <span>06°27′N / 03°24′E</span>
+        <div className="hero-image">
+          <ImageReveal
+            baseImage="/images/israel.jpeg"
+            revealImage="/images/ironman.jpg"
+          />
         </div>
 
-        <a
-          href="#work"
-          className="hero-work-link"
-        >
-          <span>Explore selected work</span>
-          <ArrowUpRight size={17} strokeWidth={1.5} />
-        </a>
+        <div className="hero-title">
+          <span className="hero-title-small">ISRAEL</span>
+          <h1>ADEOTI</h1>
+          <span className="hero-title-small hero-title-right">
+            ENGINEER / BUILDER
+          </span>
+        </div>
+
+        <div className="hero-side-note">
+          <span>BASED IN</span>
+          <strong>LAGOS, NG</strong>
+        </div>
+
+        <div className="hero-side-note hero-side-note-right">
+          <span>FOCUS</span>
+          <strong>BACKEND + AI</strong>
+        </div>
       </div>
 
       <div className="hero-bottom">
-        <div className="hero-scroll">
-          <ArrowDownRight size={16} />
-          <span>Scroll to explore</span>
+        <div className="hero-statement">
+          <span className="hero-line" />
+          <p>
+            I build software at the intersection
+            <br />
+            of <strong>data, intelligence and systems.</strong>
+          </p>
         </div>
 
-        <span className="hero-year">
-          © {new Date().getFullYear()}
-        </span>
+        <a className="hero-scroll" href="#work">
+          <span>SCROLL TO EXPLORE</span>
+          <ArrowDown size={16} />
+        </a>
+
+        <a
+          className="hero-cv"
+          href="mailto:adeotiisrael93@gmail.com?subject=Let's%20work%20together"
+        >
+          <span>GET IN TOUCH</span>
+          <ArrowUpRight size={16} />
+        </a>
       </div>
     </section>
   )
 }
+
+export default Hero
