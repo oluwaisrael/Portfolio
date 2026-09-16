@@ -16,7 +16,7 @@ const supportingProjects = [
     title: 'Payment Service',
     category: 'BACKEND SYSTEM',
     description:
-      'A payment service built around initialization, verification, webhooks and asynchronous post-payment processing.',
+      'Payments are easy to start. Reliable payments are harder. A backend service handling initialization, verification and webhook-driven fulfillment, with asynchronous processing for work that should not block the request cycle.',
     stack: ['FastAPI', 'PostgreSQL', 'Paystack', 'Redis', 'Celery'],
   },
   {
@@ -24,7 +24,7 @@ const supportingProjects = [
     title: 'Authentication Service',
     category: 'BACKEND SYSTEM',
     description:
-      'Token-based authentication with access and refresh flows, OAuth2 and PostgreSQL-backed user management.',
+      'Identity is infrastructure. An authentication layer built around JWT access and refresh flows, OAuth2 and PostgreSQL-backed user management.',
     stack: ['FastAPI', 'JWT', 'OAuth2', 'PostgreSQL'],
   },
   {
@@ -32,7 +32,7 @@ const supportingProjects = [
     title: 'Notification Service',
     category: 'ASYNC SYSTEM',
     description:
-      'An asynchronous email delivery service using queued background work instead of making the API wait on delivery.',
+      'An API should not have to wait for an email. An asynchronous notification pipeline that moves delivery into background workers while Redis and Celery handle the queue.',
     stack: ['FastAPI', 'Celery', 'Redis', 'SMTP'],
   },
   {
@@ -40,7 +40,7 @@ const supportingProjects = [
     title: 'Neural Network From Scratch',
     category: 'MACHINE LEARNING',
     description:
-      'A neural network implemented from first principles with NumPy, including forward propagation, backpropagation and softmax classification.',
+      'No framework. No abstraction hiding the mathematics. A neural network implemented from first principles with NumPy — forward propagation, backpropagation, gradient updates and softmax classification on MNIST.',
     stack: ['Python', 'NumPy', 'MNIST', 'Backpropagation'],
   },
   {
@@ -48,7 +48,7 @@ const supportingProjects = [
     title: 'Customer Churn Prediction',
     category: 'MACHINE LEARNING',
     description:
-      'An end-to-end machine learning pipeline covering preprocessing, feature engineering, evaluation and deployment.',
+      'A model is only useful when it survives the journey from dataset to decision. An end-to-end churn pipeline covering preprocessing, feature engineering, evaluation and an interactive prediction interface.',
     stack: ['Python', 'Pandas', 'Scikit-learn', 'Streamlit'],
   },
   {
@@ -56,7 +56,7 @@ const supportingProjects = [
     title: 'URL Shortener',
     category: 'BACKEND',
     description:
-      'A REST API for short-link generation, redirects and click analytics backed by PostgreSQL.',
+      'A small system with a very clear job. A REST service for generating short links, resolving redirects and recording usage data, backed by PostgreSQL.',
     stack: ['FastAPI', 'PostgreSQL', 'REST API'],
   },
 ]
@@ -64,34 +64,57 @@ const supportingProjects = [
 function ProjectVideo({
   src,
   label,
+  index,
 }: {
   src: string
   label: string
+  index: string
 }) {
   return (
-    <div className="project-video-wrap">
-      <div className="project-video-top">
-        <span>LIVE PRODUCT CAPTURE</span>
-        <span>{label}</span>
-      </div>
+    <div className="project-video-shell">
+      <div className="project-video-ambient" />
 
-      <div className="project-video">
-        <video
-          src={src}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
+      <div className="project-video-frame">
+        <div className="project-video-header">
+          <div className="project-video-header-left">
+            <span className="project-video-live-dot" />
+            <span>LIVE PRODUCT CAPTURE</span>
+          </div>
 
-        <div className="project-video-shade" />
-        <div className="project-video-corner project-video-corner-tl" />
-        <div className="project-video-corner project-video-corner-br" />
+          <div className="project-video-header-right">
+            <span>{index}</span>
+            <span>{label}</span>
+          </div>
+        </div>
 
-        <div className="project-video-status">
-          <span />
-          LIVE DEMO
+        <div className="project-video-screen">
+          <video
+            src={src}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+
+          <div className="project-video-overlay" />
+
+          <div className="project-video-grain" />
+
+          <div className="project-video-corner project-video-corner-tl" />
+          <div className="project-video-corner project-video-corner-tr" />
+          <div className="project-video-corner project-video-corner-bl" />
+          <div className="project-video-corner project-video-corner-br" />
+
+          <div className="project-video-center-mark">
+            <span />
+            <span />
+          </div>
+
+          <div className="project-video-bottom">
+            <span>PRODUCT INTERFACE</span>
+            <span>00 / 01</span>
+          </div>
         </div>
       </div>
     </div>
@@ -103,12 +126,19 @@ function App() {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40)
+    }
 
     handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
 
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   const closeMenu = () => setMenuOpen(false)
@@ -118,12 +148,20 @@ function App() {
       <CustomCursor />
 
       <header className={`nav ${scrolled ? 'nav-scrolled' : ''}`}>
-        <a href="#" className="nav-brand" onClick={closeMenu}>
+        <a
+          href="#"
+          className="nav-brand"
+          onClick={closeMenu}
+        >
           <span className="nav-index">01</span>
           <span>ISRAEL ADEOTI</span>
         </a>
 
-        <nav className={`nav-links ${menuOpen ? 'nav-links-open' : ''}`}>
+        <nav
+          className={`nav-links ${
+            menuOpen ? 'nav-links-open' : ''
+          }`}
+        >
           {navItems.map((item, index) => (
             <a
               key={item.href}
@@ -146,16 +184,28 @@ function App() {
           <button
             className="menu-button"
             type="button"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            onClick={() => setMenuOpen((open) => !open)}
+            aria-label={
+              menuOpen ? 'Close menu' : 'Open menu'
+            }
+            onClick={() =>
+              setMenuOpen((open) => !open)
+            }
           >
-            {menuOpen ? <X size={18} /> : <Menu size={18} />}
+            {menuOpen ? (
+              <X size={18} />
+            ) : (
+              <Menu size={18} />
+            )}
           </button>
         </div>
       </header>
 
       <main>
         <Hero />
+
+        {/* -------------------------------------------------
+            SELECTED WORK
+        -------------------------------------------------- */}
 
         <section className="work-section" id="work">
           <div className="section-meta">
@@ -164,7 +214,9 @@ function App() {
           </div>
 
           <div className="work-intro">
-            <p className="eyebrow">Built, not imagined.</p>
+            <p className="eyebrow">
+              Built, not imagined.
+            </p>
 
             <h2>
               The work is
@@ -173,54 +225,87 @@ function App() {
             </h2>
 
             <p>
-              A few systems I've built across backend engineering, machine
-              learning and AI. The demos below are actual product captures,
-              not mockups.
+              Systems built across backend engineering,
+              machine learning and AI. The captures below
+              show the products as they actually exist —
+              not concepts, mockups or case-study renders.
             </p>
           </div>
 
           <div className="flagship-projects">
+
+            {/* -------------------------------------------------
+                PRICE UNIVERSE
+            -------------------------------------------------- */}
+
             <article className="flagship-project flagship-project-featured">
               <div className="project-heading">
-                <div className="project-index">01</div>
+                <div className="project-index">
+                  01
+                </div>
 
                 <div>
-                  <p className="project-category">FULL-STACK / DATA SYSTEM</p>
+                  <p className="project-category">
+                    FULL-STACK / DATA SYSTEM
+                  </p>
+
                   <h3>Price Universe</h3>
                 </div>
 
-                <span className="project-state">SELECTED</span>
+                <span className="project-state">
+                  SELECTED
+                </span>
               </div>
 
               <ProjectVideo
                 src="/videos/price-universe.mp4"
                 label="PRICE INTELLIGENCE"
+                index="01"
               />
 
               <div className="project-detail-grid">
                 <div>
-                  <p className="detail-label">THE IDEA</p>
+                  <p className="detail-label">
+                    THE PROBLEM
+                  </p>
+
                   <p className="detail-copy">
-                    Product prices across Nigerian e-commerce stores are
-                    difficult to compare consistently. Price Universe turns
-                    that problem into a searchable product intelligence
-                    system.
+                    E-commerce moves fast. Price data
+                    does not always move with it.
+                  </p>
+
+                  <p className="detail-copy detail-copy-secondary">
+                    Price Universe turns scattered
+                    product listings into a single
+                    intelligence layer — collecting,
+                    processing and structuring price
+                    data so products can be compared
+                    through one interface.
                   </p>
                 </div>
 
                 <div>
-                  <p className="detail-label">THE SYSTEM</p>
+                  <p className="detail-label">
+                    THE SYSTEM
+                  </p>
+
                   <div className="architecture-line">
                     <span>SCRAPERS</span>
                     <b>→</b>
-                    <span>FASTAPI</span>
-                    <b>→</b>
                     <span>CELERY</span>
+                    <b>→</b>
+                    <span>FASTAPI</span>
                     <b>→</b>
                     <span>POSTGRES</span>
                     <b>→</b>
                     <span>REACT</span>
                   </div>
+
+                  <p className="engineering-note">
+                    Built around asynchronous workers so
+                    data collection can run independently
+                    from the product experience.
+                  </p>
                 </div>
               </div>
 
@@ -251,35 +336,60 @@ function App() {
               </div>
             </article>
 
+            {/* -------------------------------------------------
+                UNIRAG
+            -------------------------------------------------- */}
+
             <article className="flagship-project">
               <div className="project-heading">
-                <div className="project-index">02</div>
+                <div className="project-index">
+                  02
+                </div>
 
                 <div>
-                  <p className="project-category">AI / INFORMATION RETRIEVAL</p>
+                  <p className="project-category">
+                    AI / INFORMATION RETRIEVAL
+                  </p>
+
                   <h3>UniRAG</h3>
                 </div>
 
-                <span className="project-state">SELECTED</span>
+                <span className="project-state">
+                  SELECTED
+                </span>
               </div>
 
               <ProjectVideo
                 src="/videos/unirag.mp4"
                 label="RAG COURSE ASSISTANT"
+                index="02"
               />
 
               <div className="project-detail-grid">
                 <div>
-                  <p className="detail-label">THE IDEA</p>
+                  <p className="detail-label">
+                    THE PROBLEM
+                  </p>
+
                   <p className="detail-copy">
-                    Course material in. Answers out. UniRAG combines semantic
-                    and lexical retrieval so the model can reason over the
-                    right parts of the source material.
+                    Most course material is searchable.
+                    Very little of it is actually
+                    understood.
+                  </p>
+
+                  <p className="detail-copy detail-copy-secondary">
+                    UniRAG lets students ask questions
+                    against their own course material,
+                    retrieving relevant context before
+                    Gemini handles the final reasoning.
                   </p>
                 </div>
 
                 <div>
-                  <p className="detail-label">THE SYSTEM</p>
+                  <p className="detail-label">
+                    THE SYSTEM
+                  </p>
+
                   <div className="architecture-line">
                     <span>PDF</span>
                     <b>→</b>
@@ -289,6 +399,12 @@ function App() {
                     <b>→</b>
                     <span>GEMINI</span>
                   </div>
+
+                  <p className="engineering-note">
+                    FAISS handles semantic similarity.
+                    BM25 catches the exact terms embeddings
+                    can miss.
+                  </p>
                 </div>
               </div>
 
@@ -318,12 +434,21 @@ function App() {
               </div>
             </article>
 
+            {/* -------------------------------------------------
+                LAEL
+            -------------------------------------------------- */}
+
             <article className="flagship-project flagship-project-lael">
               <div className="project-heading">
-                <div className="project-index">03</div>
+                <div className="project-index">
+                  03
+                </div>
 
                 <div>
-                  <p className="project-category">NATIVE AI / SYSTEMS</p>
+                  <p className="project-category">
+                    NATIVE AI / SYSTEMS
+                  </p>
+
                   <h3>Lael</h3>
                 </div>
 
@@ -335,21 +460,35 @@ function App() {
               <ProjectVideo
                 src="/videos/lael.mp4"
                 label="PERSONAL INTELLIGENCE"
+                index="03"
               />
 
               <div className="project-detail-grid">
                 <div>
-                  <p className="detail-label">THE IDEA</p>
+                  <p className="detail-label">
+                    THE IDEA
+                  </p>
+
                   <p className="detail-copy">
-                    A personal intelligence system designed to live on the
-                    desktop rather than inside a browser tab. Voice,
-                    cognition, memory and local models come together as one
-                    system presence.
+                    Lael is an experiment in what a
+                    personal AI can become when it is not
+                    confined to a chat window.
+                  </p>
+
+                  <p className="detail-copy detail-copy-secondary">
+                    A native macOS system presence combining
+                    local speech recognition, cognition,
+                    persistent memory and local language
+                    models — designed to interact naturally
+                    over time.
                   </p>
                 </div>
 
                 <div>
-                  <p className="detail-label">THE SYSTEM</p>
+                  <p className="detail-label">
+                    THE SYSTEM
+                  </p>
+
                   <div className="architecture-line architecture-lael">
                     <span>WHISPER</span>
                     <b>→</b>
@@ -361,6 +500,13 @@ function App() {
                     <b>→</b>
                     <span>TAURI</span>
                   </div>
+
+                  <p className="engineering-note">
+                    Tauri and Rust handle the system layer,
+                    while local inference through Whisper
+                    and Qwen keeps the core intelligence
+                    on-device.
+                  </p>
                 </div>
               </div>
 
@@ -384,14 +530,24 @@ function App() {
           </div>
         </section>
 
-        <section className="systems-section" id="systems">
+        {/* -------------------------------------------------
+            ENGINEERING SYSTEMS
+        -------------------------------------------------- */}
+
+        <section
+          className="systems-section"
+          id="systems"
+        >
           <div className="section-meta">
             <span>03</span>
             <span>Engineering work</span>
           </div>
 
           <div className="systems-intro">
-            <p className="eyebrow">Beyond the flagship projects</p>
+            <p className="eyebrow">
+              Beyond the flagship projects
+            </p>
+
             <h2>
               Smaller systems.
               <br />
@@ -401,13 +557,22 @@ function App() {
 
           <div className="supporting-projects">
             {supportingProjects.map((project) => (
-              <article className="supporting-project" key={project.number}>
-                <div className="supporting-number">{project.number}</div>
+              <article
+                className="supporting-project"
+                key={project.number}
+              >
+                <div className="supporting-number">
+                  {project.number}
+                </div>
 
                 <div className="supporting-main">
                   <p>{project.category}</p>
+
                   <h3>{project.title}</h3>
-                  <span>{project.description}</span>
+
+                  <span>
+                    {project.description}
+                  </span>
                 </div>
 
                 <div className="supporting-stack">
@@ -416,20 +581,32 @@ function App() {
                   ))}
                 </div>
 
-                <ArrowUpRight className="supporting-arrow" size={20} />
+                <ArrowUpRight
+                  className="supporting-arrow"
+                  size={20}
+                />
               </article>
             ))}
           </div>
         </section>
 
-        <section className="about-section" id="about">
+        {/* -------------------------------------------------
+            ABOUT
+        -------------------------------------------------- */}
+
+        <section
+          className="about-section"
+          id="about"
+        >
           <div className="section-meta">
             <span>04</span>
             <span>About</span>
           </div>
 
           <div className="about-layout">
-            <p className="eyebrow">A little context</p>
+            <p className="eyebrow">
+              A little context
+            </p>
 
             <div>
               <h2>
@@ -439,90 +616,103 @@ function App() {
               </h2>
 
               <p className="about-copy">
-                I study Statistics at the University of Lagos and build
-                software around the things I keep wanting to understand:
-                data, intelligent systems and what happens underneath the
-                interface.
+                I study Statistics at the University of
+                Lagos and build software around the things
+                I keep wanting to understand: data,
+                intelligent systems and what happens
+                underneath the interface.
               </p>
 
               <p className="about-copy">
-                That has taken me from machine learning and retrieval systems
-                to APIs, distributed jobs, payments and native desktop
-                software.
+                That has taken me from machine learning
+                and retrieval systems to APIs, distributed
+                jobs, payments and native desktop software.
               </p>
             </div>
           </div>
 
-                      <div className="about-signal">
-              <span>STATISTICS</span>
-              <b>→</b>
-              <span>DATA</span>
-              <b>→</b>
-              <span>ML</span>
-              <b>→</b>
-              <span>AI</span>
-              <b>→</b>
-              <span>SOFTWARE</span>
-              <b>→</b>
-              <span>SYSTEMS</span>
+          <div className="about-signal">
+            <span>STATISTICS</span>
+            <b>→</b>
+            <span>DATA</span>
+            <b>→</b>
+            <span>ML</span>
+            <b>→</b>
+            <span>AI</span>
+            <b>→</b>
+            <span>SOFTWARE</span>
+            <b>→</b>
+            <span>SYSTEMS</span>
+          </div>
+        </section>
+
+        {/* -------------------------------------------------
+            CONTACT
+        -------------------------------------------------- */}
+
+        <section
+          className="contact-section"
+          id="contact"
+        >
+          <div className="section-meta">
+            <span>05</span>
+            <span>Contact</span>
+          </div>
+
+          <div className="contact-layout">
+            <div>
+              <p className="eyebrow">
+                Have something worth building?
+              </p>
+
+              <h2>
+                Let’s make
+                <br />
+                <em>something real.</em>
+              </h2>
             </div>
-          </section>
 
-          <section className="contact-section" id="contact">
-            <div className="section-meta">
-              <span>05</span>
-              <span>Contact</span>
+            <div className="contact-actions">
+              <a
+                href="mailto:adeotiisrael93@gmail.com"
+                className="contact-link"
+              >
+                <span>
+                  adeotiisrael93@gmail.com
+                </span>
+                <ArrowUpRight size={20} />
+              </a>
+
+              <a
+                href="https://github.com/oluwaisrael"
+                target="_blank"
+                rel="noreferrer"
+                className="contact-link"
+              >
+                <span>GitHub</span>
+                <ArrowUpRight size={20} />
+              </a>
+
+              <a
+                href="https://linkedin.com/in/adeoti-israel-a10503262"
+                target="_blank"
+                rel="noreferrer"
+                className="contact-link"
+              >
+                <span>LinkedIn</span>
+                <ArrowUpRight size={20} />
+              </a>
             </div>
+          </div>
+        </section>
+      </main>
 
-            <div className="contact-layout">
-              <div>
-                <p className="eyebrow">Have something worth building?</p>
-                <h2>
-                  Let’s make
-                  <br />
-                  <em>something real.</em>
-                </h2>
-              </div>
-
-              <div className="contact-actions">
-                <a
-                  href="mailto:adeotiisrael93@gmail.com"
-                  className="contact-link"
-                >
-                  <span>adeotiisrael93@gmail.com</span>
-                  <ArrowUpRight size={20} />
-                </a>
-
-                <a
-                  href="https://github.com/oluwaisrael"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="contact-link"
-                >
-                  <span>GitHub</span>
-                  <ArrowUpRight size={20} />
-                </a>
-
-                <a
-                  href="https://linkedin.com/in/adeoti-israel-a10503262"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="contact-link"
-                >
-                  <span>LinkedIn</span>
-                  <ArrowUpRight size={20} />
-                </a>
-              </div>
-            </div>
-          </section>
-        </main>
-
-        <footer className="site-footer">
-          <span>© 2026 ADEOTI ISRAEL</span>
-          <span>SOFTWARE / AI / SYSTEMS</span>
-          <span>LAGOS, NG</span>
-        </footer>
-      </div>
+      <footer className="site-footer">
+        <span>© 2026 ADEOTI ISRAEL</span>
+        <span>SOFTWARE / AI / SYSTEMS</span>
+        <span>LAGOS, NG</span>
+      </footer>
+    </div>
   )
 }
 
