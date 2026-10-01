@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 export interface MousePosition {
   x: number
@@ -42,10 +42,18 @@ export function useMousePosition() {
     }
 
     window.addEventListener('mousemove', handleMove)
-    document.documentElement.addEventListener('mouseleave', handleLeave)
+
+    document.documentElement.addEventListener(
+      'mouseleave',
+      handleLeave,
+    )
 
     return () => {
-      window.removeEventListener('mousemove', handleMove)
+      window.removeEventListener(
+        'mousemove',
+        handleMove,
+      )
+
       document.documentElement.removeEventListener(
         'mouseleave',
         handleLeave,
@@ -53,15 +61,18 @@ export function useMousePosition() {
     }
   }, [])
 
-  const subscribe = (
-    listener: (position: MousePosition) => void,
-  ) => {
-    listeners.current.add(listener)
+  const subscribe = useCallback(
+    (
+      listener: (position: MousePosition) => void,
+    ) => {
+      listeners.current.add(listener)
 
-    return () => {
-      listeners.current.delete(listener)
-    }
-  }
+      return () => {
+        listeners.current.delete(listener)
+      }
+    },
+    [],
+  )
 
   return {
     position,
