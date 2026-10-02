@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, Menu, X } from 'lucide-react'
 import Hero from './components/Hero'
-import { CustomCursor } from './components/CustomCursor'
 
 const navItems = [
-  { label: 'Work', href: '#work' },
-  { label: 'Systems', href: '#systems' },
+  { label: 'Home', href: '#' },
+  { label: 'Projects', href: '#work' },
   { label: 'About', href: '#about' },
+  { label: 'Engineering', href: '#systems' },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -145,16 +145,13 @@ function App() {
 
   return (
     <div className="site">
-      <CustomCursor />
-
       <header className={`nav ${scrolled ? 'nav-scrolled' : ''}`}>
         <a
           href="#"
           className="nav-brand"
           onClick={closeMenu}
         >
-          <span className="nav-index">01</span>
-          <span>ISRAEL ADEOTI</span>
+          <span className="nav-monogram">IA</span>
         </a>
 
         <nav
@@ -215,20 +212,20 @@ function App() {
 
           <div className="work-intro">
             <p className="eyebrow">
-              Built, not imagined.
+              Selected work
             </p>
 
             <h2>
-              The work is
+              Things I’ve
               <br />
-              <em>the proof.</em>
+              <em>actually built.</em>
             </h2>
 
             <p>
               Systems built across backend engineering,
-              machine learning and AI. The captures below
-              show the products as they actually exist —
-              not concepts, mockups or case-study renders.
+              data work and machine learning. The captures
+              below are working projects, not placeholder
+              case studies.
             </p>
           </div>
 
@@ -348,7 +345,7 @@ function App() {
 
                 <div>
                   <p className="project-category">
-                    AI / INFORMATION RETRIEVAL
+                    INFORMATION RETRIEVAL
                   </p>
 
                   <h3>UniRAG</h3>
@@ -446,7 +443,7 @@ function App() {
 
                 <div>
                   <p className="project-category">
-                    NATIVE AI / SYSTEMS
+                    DESKTOP / LOCAL MODELS
                   </p>
 
                   <h3>Lael</h3>
@@ -470,17 +467,16 @@ function App() {
                   </p>
 
                   <p className="detail-copy">
-                    Lael is an experiment in what a
-                    personal AI can become when it is not
-                    confined to a chat window.
+                    Lael is an experiment in what a desktop
+                    assistant can become when it is treated
+                    like a native tool.
                   </p>
 
                   <p className="detail-copy detail-copy-secondary">
-                    A native macOS system presence combining
+                    A native macOS tool combining
                     local speech recognition, cognition,
                     persistent memory and local language
-                    models — designed to interact naturally
-                    over time.
+                    models.
                   </p>
                 </div>
 
@@ -504,7 +500,7 @@ function App() {
                   <p className="engineering-note">
                     Tauri and Rust handle the system layer,
                     while local inference through Whisper
-                    and Qwen keeps the core intelligence
+                    and Qwen keeps the heavier work
                     on-device.
                   </p>
                 </div>
@@ -531,7 +527,7 @@ function App() {
         </section>
 
         {/* -------------------------------------------------
-            ENGINEERING SYSTEMS
+            ENGINEERING WORK
         -------------------------------------------------- */}
 
         <section
@@ -549,9 +545,9 @@ function App() {
             </p>
 
             <h2>
-              Smaller systems.
+              Smaller work.
               <br />
-              <em>Same obsession.</em>
+              <em>Same care.</em>
             </h2>
           </div>
 
@@ -612,15 +608,15 @@ function App() {
               <h2>
                 Statistics taught me to
                 <br />
-                <em>look for the signal.</em>
+                <em>respect the data.</em>
               </h2>
 
               <p className="about-copy">
                 I study Statistics at the University of
                 Lagos and build software around the things
                 I keep wanting to understand: data,
-                intelligent systems and what happens
-                underneath the interface.
+                backend systems and what happens underneath
+                the interface.
               </p>
 
               <p className="about-copy">
@@ -638,11 +634,11 @@ function App() {
             <b>→</b>
             <span>ML</span>
             <b>→</b>
-            <span>AI</span>
+            <span>ML</span>
             <b>→</b>
             <span>SOFTWARE</span>
             <b>→</b>
-            <span>SYSTEMS</span>
+            <span>BACKEND</span>
           </div>
         </section>
 
@@ -662,7 +658,7 @@ function App() {
           <div className="contact-layout">
             <div>
               <p className="eyebrow">
-                Have something worth building?
+                Have something useful to build?
               </p>
 
               <h2>
@@ -709,7 +705,7 @@ function App() {
 
       <footer className="site-footer">
         <span>© 2026 ADEOTI ISRAEL</span>
-        <span>SOFTWARE / AI / SYSTEMS</span>
+        <span>SOFTWARE / DATA / BACKEND</span>
         <span>LAGOS, NG</span>
       </footer>
     </div>
