@@ -206,7 +206,7 @@ function App() {
 
         <section className="work-section" id="work">
           <div className="section-meta">
-            <span>02</span>
+            <span>01</span>
             <span>Selected work</span>
           </div>
 
@@ -535,7 +535,7 @@ function App() {
           id="systems"
         >
           <div className="section-meta">
-            <span>03</span>
+            <span>02</span>
             <span>Engineering work</span>
           </div>
 
@@ -595,7 +595,7 @@ function App() {
           id="about"
         >
           <div className="section-meta">
-            <span>04</span>
+            <span>03</span>
             <span>About</span>
           </div>
 
@@ -634,8 +634,6 @@ function App() {
             <b>→</b>
             <span>ML</span>
             <b>→</b>
-            <span>ML</span>
-            <b>→</b>
             <span>SOFTWARE</span>
             <b>→</b>
             <span>BACKEND</span>
@@ -651,7 +649,7 @@ function App() {
           id="contact"
         >
           <div className="section-meta">
-            <span>05</span>
+            <span>04</span>
             <span>Contact</span>
           </div>
 

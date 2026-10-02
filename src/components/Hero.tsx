@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useState,
-  type CSSProperties,
-  type PointerEvent,
-} from 'react'
+import { useState, type CSSProperties, type PointerEvent } from 'react'
 import {
   ArrowDown,
   ArrowUpRight,
@@ -12,10 +7,6 @@ import {
   Network,
   Send,
 } from 'lucide-react'
-import {
-  useMousePosition,
-  type MousePosition,
-} from '../hooks/useMousePosition'
 import { profile } from '../data/profile'
 
 const assistantPrompts = [
@@ -160,17 +151,10 @@ function getAssistantAnswer(question: string) {
     return `${profile.displayName} builds across ${profile.focusAreas.join(', ')}. His edge is ${profile.strengths.join('; ')}. The main projects to look at are ${profile.projects.map((item) => item.name).join(', ')}.`
   }
 
-    return `Good question. Based on what I know, ${profile.displayName} is strongest around full-stack work, backend/API design, data, and retrieval-based products. Ask about Price Universe, UniRAG, Lael, availability, or contact.`
+  return `Good question. Based on what I know, ${profile.displayName} is strongest around full-stack work, backend/API design, data, and retrieval-based products. Ask about Price Universe, UniRAG, Lael, availability, or contact.`
 }
 
 function Hero() {
-  const [mouse, setMouse] = useState<MousePosition>({
-    x: 0,
-    y: 0,
-    inside: false,
-  })
-
-  const [isTouch, setIsTouch] = useState(false)
   const [armorState, setArmorState] = useState({
     active: false,
     x: 50,
@@ -181,67 +165,10 @@ function Hero() {
     `Hi, I’m ${profile.displayName}’s assistant. Ask me about his work, projects, journey or contact details.`,
   )
 
-  const { subscribe } = useMousePosition()
-
-  useEffect(() => {
-    return subscribe(setMouse)
-  }, [subscribe])
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(hover: none)')
-
-    const update = () => {
-      setIsTouch(mediaQuery.matches)
-    }
-
-    update()
-    mediaQuery.addEventListener('change', update)
-
-    return () => {
-      mediaQuery.removeEventListener('change', update)
-    }
-  }, [])
-
-  const centerX = window.innerWidth / 2
-  const centerY = window.innerHeight / 2
-
-  const normalizedX = mouse.inside
-    ? (mouse.x - centerX) / centerX
-    : 0
-
-  const normalizedY = mouse.inside
-    ? (mouse.y - centerY) / centerY
-    : 0
-
-  const depthX = isTouch ? 0 : normalizedX
-  const depthY = isTouch ? 0 : normalizedY
-
-  const backgroundTransform = `
-    translate(
-      calc(-50% + ${depthX * -5}px),
-      calc(-50% + ${depthY * -3}px)
-    )
-    scale(1.02)
-  `
-
-  const imageTransform = `
-    translate(
-      calc(-50% + ${depthX * 3}px),
-      calc(-50% + ${depthY * 2}px)
-    )
-  `
-
-  const titleTransform = `
-    translate(
-      ${depthX * -1.5}px,
-      ${depthY * -1}px
-    )
-  `
-
   const handleArmorMove = (
     event: PointerEvent<HTMLDivElement>,
   ) => {
-    if (isTouch) {
+    if (event.pointerType === 'touch' && event.buttons === 0) {
       return
     }
 
@@ -257,7 +184,6 @@ function Hero() {
   }
 
   const armorStyle = {
-    transform: imageTransform,
     '--reveal-x': `${armorState.x}%`,
     '--reveal-y': `${armorState.y}%`,
   } as CSSProperties
@@ -277,33 +203,14 @@ function Hero() {
     <section className="hero">
       <div className="hero-stage">
         <div
-          className="hero-background-word"
-          style={{
-            transform: backgroundTransform,
-          }}
-          aria-hidden="true"
-        >
-          WORK
-        </div>
-
-        <div className="hero-hud hero-hud-left">
-          <span className="hud-dot" />
-          <span>Lagos, Nigeria</span>
-          <strong>Available for remote work</strong>
-        </div>
-
-        <div className="hero-hud hero-hud-right">
-          <span>Building</span>
-          <strong>useful software</strong>
-        </div>
-
-        <div
           className={`hero-image ${
             armorState.active ? 'is-armor-active' : ''
           }`}
           style={armorStyle}
           onPointerDown={handleArmorMove}
           onPointerMove={handleArmorMove}
+          onPointerUp={() => setArmorState((state) => ({ ...state, active: false }))}
+          onPointerCancel={() => setArmorState((state) => ({ ...state, active: false }))}
           onPointerLeave={() => {
             setArmorState({
               active: false,
@@ -315,14 +222,9 @@ function Hero() {
           <div className="hero-armor-reveal">
             <img
               className="hero-main-portrait"
-              src="/images/israel.jpeg"
+              src="/images/green.jpeg"
               alt="Israel Adeoti"
               draggable={false}
-            />
-
-            <div
-              className="hero-reveal-ring"
-              aria-hidden="true"
             />
 
             <img
@@ -335,13 +237,8 @@ function Hero() {
           </div>
         </div>
 
-        <div
-          className="hero-title"
-          style={{
-            transform: titleTransform,
-          }}
-        >
-          <span className="hero-kicker">01 - 06</span>
+        <div className="hero-title">
+          <span className="hero-kicker">DERIN / LAGOS, NIGERIA</span>
 
           <h1>
             ISRAEL
@@ -383,9 +280,9 @@ function Hero() {
               LinkedIn
             </a>
 
-            <a href="#contact">
+            <a href="mailto:adeotiisrael93@gmail.com">
               <FileText size={14} />
-              Resume
+              Email
             </a>
           </div>
         </div>
@@ -459,7 +356,7 @@ function Hero() {
           className="hero-scroll"
           href="#work"
         >
-          <span>SCROLL TO EXPLORE</span>
+          <span>EXPLORE WORK</span>
           <ArrowDown size={16} />
         </a>
 
