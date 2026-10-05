@@ -106,6 +106,23 @@ function SystemBlueprint({ reducedMotion }: { reducedMotion: boolean }) {
   )
 }
 
+function BlueprintFallback() {
+  return (
+    <div className="hero-blueprint-fallback" aria-hidden="true">
+      {blueprintModules.map((module) => (
+        <span
+          className={module.accent ? 'is-accent' : ''}
+          key={module.id}
+          style={{
+            left: `${((module.position[0] + 2.2) / 4.4) * 100}%`,
+            top: `${((1.4 - module.position[1]) / 2.8) * 100}%`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
 export default function HeroScene() {
   const [canRender] = useState(() => {
     const canvas = document.createElement('canvas')
@@ -116,7 +133,7 @@ export default function HeroScene() {
     window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
 
-  if (!canRender) return null
+  if (!canRender) return <BlueprintFallback />
 
   return (
     <Canvas
