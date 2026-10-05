@@ -6,6 +6,7 @@ export const profile = {
   school: 'University of Lagos',
   course: 'Statistics',
   level: '300 level',
+  age: 19,
   intro: 'I love what I do mehn.',
   bio: 'Learning fast, building carefully, and shipping real work.',
   positioning:

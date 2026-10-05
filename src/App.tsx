@@ -72,50 +72,18 @@ function ProjectVideo({
 }) {
   return (
     <div className="project-video-shell">
-      <div className="project-video-ambient" />
-
-      <div className="project-video-frame">
-        <div className="project-video-header">
-          <div className="project-video-header-left">
-            <span className="project-video-live-dot" />
-            <span>LIVE PRODUCT CAPTURE</span>
-          </div>
-
-          <div className="project-video-header-right">
-            <span>{index}</span>
-            <span>{label}</span>
-          </div>
-        </div>
-
-        <div className="project-video-screen">
-          <video
-            src={src}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-
-          <div className="project-video-overlay" />
-
-          <div className="project-video-grain" />
-
-          <div className="project-video-corner project-video-corner-tl" />
-          <div className="project-video-corner project-video-corner-tr" />
-          <div className="project-video-corner project-video-corner-bl" />
-          <div className="project-video-corner project-video-corner-br" />
-
-          <div className="project-video-center-mark">
-            <span />
-            <span />
-          </div>
-
-          <div className="project-video-bottom">
-            <span>PRODUCT INTERFACE</span>
-            <span>00 / 01</span>
-          </div>
-        </div>
+      <video
+        src={src}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={`${label} product demo`}
+      />
+      <div className="project-video-caption">
+        <span>{index} / {label}</span>
+        <span>PRODUCT CAPTURE</span>
       </div>
     </div>
   )
@@ -216,16 +184,14 @@ function App() {
             </p>
 
             <h2>
-              Things I’ve
+              Selected
               <br />
-              <em>actually built.</em>
+              <em>systems.</em>
             </h2>
 
             <p>
-              Systems built across backend engineering,
-              data work and machine learning. The captures
-              below are working projects, not placeholder
-              case studies.
+              Products and engineering work across backend
+              systems, retrieval, and local software.
             </p>
           </div>
 
@@ -600,11 +566,10 @@ function App() {
           </div>
 
           <div className="about-layout">
-            <p className="eyebrow">
-              A little context
-            </p>
-
-            <div>
+            <div className="about-copy-block">
+              <p className="eyebrow">
+                A little context
+              </p>
               <h2>
                 Statistics taught me to
                 <br />
@@ -624,6 +589,13 @@ function App() {
                 and retrieval systems to APIs, distributed
                 jobs, payments and native desktop software.
               </p>
+            </div>
+            <div className="about-visual">
+              <img
+                src="/images/israel-cutout.png"
+                alt="Israel adjusting his cap"
+                loading="lazy"
+              />
             </div>
           </div>
 

@@ -1,13 +1,17 @@
-import { useState, type CSSProperties, type PointerEvent } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import {
   ArrowDown,
   ArrowUpRight,
-  FileText,
+  ChevronDown,
   GitBranch,
+  Mail,
+  MessageCircle,
   Network,
   Send,
 } from 'lucide-react'
 import { profile } from '../data/profile'
+
+const HeroScene = lazy(() => import('./HeroScene'))
 
 const assistantPrompts = [
   'What does Israel build?',
@@ -48,15 +52,7 @@ function getAssistantAnswer(question: string) {
   const value = question.toLowerCase()
   const project = findProject(value)
 
-  if (
-    includesAny(value, [
-      'hello',
-      'hi',
-      'hey',
-      'yo',
-      'sup',
-    ])
-  ) {
+  if (/\b(hello|hi|hey|yo|sup)\b/.test(value)) {
     return `Hey. I’m here for the useful stuff: ${profile.displayName} is ${profile.positioning.toLowerCase()} Ask me about his projects, availability, stack, or how to reach him.`
   }
 
@@ -126,6 +122,19 @@ function getAssistantAnswer(question: string) {
 
   if (
     includesAny(value, [
+      'build',
+      'skill',
+      'stack',
+      'work',
+      'project',
+      'focus',
+    ])
+  ) {
+    return `${profile.displayName} builds across ${profile.focusAreas.join(', ')}. His edge is ${profile.strengths.join('; ')}. The main projects to look at are ${profile.projects.map((item) => item.name).join(', ')}.`
+  }
+
+  if (
+    includesAny(value, [
       'who',
       'about',
       'name',
@@ -137,56 +146,15 @@ function getAssistantAnswer(question: string) {
     return `${profile.name}, also known as ${profile.displayName}, is a ${profile.level} ${profile.course} student in ${profile.location}. ${profile.positioning} In his words: “${profile.intro}” and yes, the confidence is part of the brand: ${profile.bio}`
   }
 
-  if (
-    includesAny(value, [
-      'build',
-      'skill',
-      'stack',
-      'work',
-      'project',
-      'do',
-      'focus',
-    ])
-  ) {
-    return `${profile.displayName} builds across ${profile.focusAreas.join(', ')}. His edge is ${profile.strengths.join('; ')}. The main projects to look at are ${profile.projects.map((item) => item.name).join(', ')}.`
-  }
-
   return `Good question. Based on what I know, ${profile.displayName} is strongest around full-stack work, backend/API design, data, and retrieval-based products. Ask about Price Universe, UniRAG, Lael, availability, or contact.`
 }
 
 function Hero() {
-  const [armorState, setArmorState] = useState({
-    active: false,
-    x: 50,
-    y: 50,
-  })
   const [assistantQuestion, setAssistantQuestion] = useState('')
+  const [assistantOpen, setAssistantOpen] = useState(false)
   const [assistantAnswer, setAssistantAnswer] = useState(
     `Hi, I’m ${profile.displayName}’s assistant. Ask me about his work, projects, journey or contact details.`,
   )
-
-  const handleArmorMove = (
-    event: PointerEvent<HTMLDivElement>,
-  ) => {
-    if (event.pointerType === 'touch' && event.buttons === 0) {
-      return
-    }
-
-    const rect = event.currentTarget.getBoundingClientRect()
-    const localX = event.clientX - rect.left
-    const localY = event.clientY - rect.top
-
-    setArmorState({
-      active: true,
-      x: Math.max(0, Math.min(100, (localX / rect.width) * 100)),
-      y: Math.max(0, Math.min(100, (localY / rect.height) * 100)),
-    })
-  }
-
-  const armorStyle = {
-    '--reveal-x': `${armorState.x}%`,
-    '--reveal-y': `${armorState.y}%`,
-  } as CSSProperties
 
   const askAssistant = (question: string) => {
     const cleanQuestion = question.trim()
@@ -202,95 +170,95 @@ function Hero() {
   return (
     <section className="hero">
       <div className="hero-stage">
-        <div
-          className={`hero-image ${
-            armorState.active ? 'is-armor-active' : ''
-          }`}
-          style={armorStyle}
-          onPointerDown={handleArmorMove}
-          onPointerMove={handleArmorMove}
-          onPointerUp={() => setArmorState((state) => ({ ...state, active: false }))}
-          onPointerCancel={() => setArmorState((state) => ({ ...state, active: false }))}
-          onPointerLeave={() => {
-            setArmorState({
-              active: false,
-              x: 50,
-              y: 50,
-            })
-          }}
-        >
-          <div className="hero-armor-reveal">
-            <img
-              className="hero-main-portrait"
-              src="/images/green.jpeg"
-              alt="Israel Adeoti"
-              draggable={false}
-            />
+        <div className="hero-image" aria-label="Portrait of Adeoti Israel">
+          <div className="hero-portrait-grid" aria-hidden="true" />
+          <Suspense fallback={null}>
+            <HeroScene />
+          </Suspense>
+          <div className="hero-portrait-mark hero-portrait-mark-top" aria-hidden="true">01</div>
+          <div className="hero-portrait-mark hero-portrait-mark-bottom" aria-hidden="true">LAGOS / NG</div>
+          <img
+            className="hero-main-portrait"
+            src="/images/derin-cutout.png"
+            alt="Adeoti Israel"
+            draggable={false}
+          />
+        </div>
 
-            <img
-              className="hero-ironman-cover"
-              src="/images/ironman.jpg"
-              alt=""
-              aria-hidden="true"
-              draggable={false}
-            />
+        <div className="hero-content">
+          <div className="hero-title">
+            <span className="hero-kicker">ADEOTI ISRAEL / SOFTWARE ENGINEER</span>
+
+            <h1>DERIN<span>.</span></h1>
+
+            <span className="hero-title-small">
+              BACKEND SYSTEMS / DATA / APPLIED AI
+            </span>
+          </div>
+
+          <div className="hero-summary">
+            <p className="hero-lede">
+              I build useful things.
+            </p>
+
+            <p className="hero-copy">
+              A Statistics student at the University of Lagos
+              building dependable software, from product APIs
+              to retrieval systems and data tools.
+            </p>
+
+            <div className="hero-actions">
+              <a className="hero-primary-link" href="#work">
+                See my work
+                <ArrowUpRight size={16} />
+              </a>
+              <a
+                href="https://github.com/oluwaisrael"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                title="GitHub"
+              >
+                <GitBranch size={17} />
+              </a>
+
+              <a
+                href="https://linkedin.com/in/adeoti-israel-a10503262"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                title="LinkedIn"
+              >
+                <Network size={17} />
+              </a>
+
+              <a
+                href="mailto:adeotiisrael93@gmail.com"
+                aria-label="Email"
+                title="Email"
+              >
+                <Mail size={17} />
+              </a>
+            </div>
           </div>
         </div>
 
-        <div className="hero-title">
-          <span className="hero-kicker">DERIN / LAGOS, NIGERIA</span>
-
-          <h1>
-            ISRAEL
-            <br />
-            ADEOTI
-          </h1>
-
-          <span className="hero-title-small">
-            SOFTWARE / DATA / BACKEND
-          </span>
-
-          <p className="hero-lede">
-            Building useful things.
-          </p>
-
-          <p className="hero-copy">
-            I build real systems, from data pipelines
-            and backend services to practical products.
-            Currently a Statistics student at UNILAG,
-            focused on backend engineering and applied ML.
-          </p>
-
-          <div className="hero-actions">
-            <a
-              href="https://github.com/oluwaisrael"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GitBranch size={14} />
-              GitHub
-            </a>
-
-            <a
-              href="https://linkedin.com/in/adeoti-israel-a10503262"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Network size={14} />
-              LinkedIn
-            </a>
-
-            <a href="mailto:adeotiisrael93@gmail.com">
-              <FileText size={14} />
-              Email
-            </a>
-          </div>
-        </div>
-
-        <aside className="hero-assistant">
+        <aside className={`hero-assistant ${assistantOpen ? 'is-open' : ''}`}>
+          <button
+            className="assistant-toggle"
+            type="button"
+            aria-expanded={assistantOpen}
+            aria-controls="assistant-body"
+            onClick={() => setAssistantOpen((open) => !open)}
+          >
+            <MessageCircle size={17} />
+            <span>Ask about Derin</span>
+            <ChevronDown size={17} />
+          </button>
+          <div className="assistant-body" id="assistant-body">
           <div className="assistant-header">
             <div>
-              <span>Ask Israel</span>
+              <span>Ask about Derin</span>
               <strong>Online</strong>
             </div>
 
@@ -335,22 +303,12 @@ function Hero() {
               <Send size={14} />
             </button>
           </form>
+          </div>
         </aside>
       </div>
 
       <div className="hero-bottom">
-        <div className="hero-statement">
-          <span
-            className="hero-line"
-            aria-hidden="true"
-          />
-
-          <p>
-            6.5244° N
-            <br />
-            3.3792° E
-          </p>
-        </div>
+        <span className="hero-location">LAGOS, NIGERIA</span>
 
         <a
           className="hero-scroll"
