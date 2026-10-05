@@ -1,25 +1,17 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useMemo, useRef, useState } from 'react'
 import type { Group, Mesh } from 'three'
-
-type Point = [number, number, number]
-
-const modules: { position: Point; scale: Point; accent: boolean }[] = [
-  { position: [-1.7, 0.86, 0], scale: [0.46, 0.24, 0.12], accent: false },
-  { position: [-0.77, -0.62, 0], scale: [0.58, 0.26, 0.12], accent: true },
-  { position: [0.42, 0.74, 0], scale: [0.52, 0.3, 0.12], accent: false },
-  { position: [1.5, -0.1, 0], scale: [0.44, 0.22, 0.12], accent: false },
-  { position: [1.17, -1.05, 0], scale: [0.36, 0.18, 0.12], accent: true },
-]
-
-const links: [number, number][] = [
-  [0, 1], [0, 2], [1, 2], [1, 4], [2, 3], [3, 4],
-]
+import {
+  blueprintLinks,
+  blueprintModules,
+  type BlueprintModule,
+  type BlueprintPoint,
+} from '../data/blueprint'
 
 function BlueprintLinks() {
-  const positions = useMemo(() => new Float32Array(links.flatMap(([from, to]) => [
-    ...modules[from].position,
-    ...modules[to].position,
+  const positions = useMemo(() => new Float32Array(blueprintLinks.flatMap(([from, to]) => [
+    ...blueprintModules[from].position,
+    ...blueprintModules[to].position,
   ])), [])
 
   return (
@@ -32,7 +24,7 @@ function BlueprintLinks() {
   )
 }
 
-function BlueprintModule({ position, scale, accent }: (typeof modules)[number]) {
+function BlueprintModule({ position, scale, accent }: BlueprintModule) {
   const color = accent ? '#d9797c' : '#85cbd4'
 
   return (
@@ -59,8 +51,8 @@ function Signal({
   offset,
   reducedMotion,
 }: {
-  start: Point
-  end: Point
+  start: BlueprintPoint
+  end: BlueprintPoint
   offset: number
   reducedMotion: boolean
 }) {
@@ -100,12 +92,12 @@ function SystemBlueprint({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <group ref={group} position={[0.88, -0.12, 0]}>
       <BlueprintLinks />
-      {modules.map((module, index) => <BlueprintModule key={index} {...module} />)}
-      {links.slice(0, 4).map(([from, to], index) => (
+      {blueprintModules.map((module) => <BlueprintModule key={module.id} {...module} />)}
+      {blueprintLinks.slice(0, 4).map(([from, to], index) => (
         <Signal
           key={`${from}-${to}`}
-          start={modules[from].position}
-          end={modules[to].position}
+          start={blueprintModules[from].position}
+          end={blueprintModules[to].position}
           offset={index * 0.19}
           reducedMotion={reducedMotion}
         />
