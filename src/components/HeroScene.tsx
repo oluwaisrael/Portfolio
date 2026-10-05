@@ -7,6 +7,7 @@ import {
   type BlueprintModule,
   type BlueprintPoint,
 } from '../data/blueprint'
+import { useDocumentVisibility } from '../hooks/useDocumentVisibility'
 
 function BlueprintLinks() {
   const positions = useMemo(() => new Float32Array(blueprintLinks.flatMap(([from, to]) => [
@@ -130,6 +131,7 @@ function BlueprintFallback() {
 }
 
 export default function HeroScene() {
+  const isDocumentVisible = useDocumentVisibility()
   const [canRender] = useState(() => {
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('webgl2') || canvas.getContext('webgl')
@@ -146,6 +148,7 @@ export default function HeroScene() {
       className="hero-canvas"
       camera={{ fov: 42, position: [0, 0, 5.2]}}
       dpr={[1, 1.5]}
+      frameloop={isDocumentVisible ? 'always' : 'never'}
       gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
       aria-hidden="true"
     >
