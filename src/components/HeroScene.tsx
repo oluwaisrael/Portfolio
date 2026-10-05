@@ -1,42 +1,97 @@
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { Group, Mesh } from 'three'
 
-function SystemCore() {
-  const group = useRef<Group>(null)
-  const shell = useRef<Mesh>(null)
-  const ring = useRef<Mesh>(null)
+type Point = [number, number, number]
 
-  useFrame((state, delta) => {
-    if (!group.current || !shell.current || !ring.current) return
+const modules: { position: Point; scale: Point; accent: boolean }[] = [
+  { position: [-1.7, 0.86, 0], scale: [0.46, 0.24, 0.12], accent: false },
+  { position: [-0.77, -0.62, 0], scale: [0.58, 0.26, 0.12], accent: true },
+  { position: [0.42, 0.74, 0], scale: [0.52, 0.3, 0.12], accent: false },
+  { position: [1.5, -0.1, 0], scale: [0.44, 0.22, 0.12], accent: false },
+  { position: [1.17, -1.05, 0], scale: [0.36, 0.18, 0.12], accent: true },
+]
 
-    const targetX = state.pointer.y * 0.18
-    const targetY = state.pointer.x * 0.3
+const links: [number, number][] = [
+  [0, 1], [0, 2], [1, 2], [1, 4], [2, 3], [3, 4],
+]
 
-    group.current.rotation.x += (targetX - group.current.rotation.x) * delta * 1.8
-    group.current.rotation.y += (targetY - group.current.rotation.y) * delta * 1.8
-    shell.current.rotation.y += delta * 0.15
-    ring.current.rotation.z -= delta * 0.22
+function BlueprintLinks() {
+  const positions = useMemo(() => new Float32Array(links.flatMap(([from, to]) => [
+    ...modules[from].position,
+    ...modules[to].position,
+  ])), [])
+
+  return (
+    <lineSegments>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <lineBasicMaterial color="#6fb5c0" transparent opacity={0.42} />
+    </lineSegments>
+  )
+}
+
+function BlueprintModule({ position, scale, accent }: (typeof modules)[number]) {
+  const color = accent ? '#d9797c' : '#85cbd4'
+
+  return (
+    <group position={position}>
+      <mesh>
+        <boxGeometry args={scale} />
+        <meshBasicMaterial color="#10243a" transparent opacity={0.76} />
+      </mesh>
+      <mesh>
+        <boxGeometry args={[scale[0] + 0.06, scale[1] + 0.06, scale[2] + 0.04]} />
+        <meshBasicMaterial color={color} wireframe transparent opacity={0.72} />
+      </mesh>
+      <mesh position={[0, 0, scale[2] + 0.06]}>
+        <boxGeometry args={[0.07, 0.07, 0.04]} />
+        <meshBasicMaterial color={color} />
+      </mesh>
+    </group>
+  )
+}
+
+function Signal({ start, end, offset }: { start: Point; end: Point; offset: number }) {
+  const signal = useRef<Mesh>(null)
+
+  useFrame(({ clock }) => {
+    if (!signal.current) return
+    const progress = (clock.getElapsedTime() * 0.18 + offset) % 1
+    signal.current.position.set(
+      start[0] + (end[0] - start[0]) * progress,
+      start[1] + (end[1] - start[1]) * progress,
+      0.16,
+    )
   })
 
   return (
-    <group ref={group} position={[0.7, -0.15, 0]}>
-      <mesh ref={shell}>
-        <icosahedronGeometry args={[1.24, 2]} />
-        <meshBasicMaterial color="#78c7d4" wireframe transparent opacity={0.22} />
-      </mesh>
+    <mesh ref={signal}>
+      <sphereGeometry args={[0.045, 10, 10]} />
+      <meshBasicMaterial color="#d9797c" />
+    </mesh>
+  )
+}
 
-      <mesh ref={ring} rotation={[1.1, 0.2, 0]}>
-        <torusGeometry args={[1.53, 0.014, 8, 64]} />
-        <meshBasicMaterial color="#d97a7e" transparent opacity={0.75} />
-      </mesh>
+function SystemBlueprint() {
+  const group = useRef<Group>(null)
 
-      <mesh rotation={[0.1, 0.8, 0.4]}>
-        <octahedronGeometry args={[0.48, 0]} />
-        <meshBasicMaterial color="#8ccbd4" wireframe transparent opacity={0.56} />
-      </mesh>
+  useFrame((state, delta) => {
+    if (!group.current) return
+    const targetX = state.pointer.y * 0.12
+    const targetY = state.pointer.x * 0.16
+    group.current.rotation.x += (targetX - group.current.rotation.x) * delta * 1.7
+    group.current.rotation.y += (targetY - group.current.rotation.y) * delta * 1.7
+  })
 
-      <pointLight color="#8ccbd4" intensity={2} distance={4} />
+  return (
+    <group ref={group} position={[0.88, -0.12, 0]}>
+      <BlueprintLinks />
+      {modules.map((module, index) => <BlueprintModule key={index} {...module} />)}
+      {links.slice(0, 4).map(([from, to], index) => (
+        <Signal key={`${from}-${to}`} start={modules[from].position} end={modules[to].position} offset={index * 0.19} />
+      ))}
     </group>
   )
 }
@@ -53,12 +108,12 @@ export default function HeroScene() {
   return (
     <Canvas
       className="hero-canvas"
-      camera={{ fov: 42, position: [0, 0, 5.2] }}
+      camera={{ fov: 42, position: [0, 0, 5.2]}}
       dpr={[1, 1.5]}
       gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
       aria-hidden="true"
     >
-      <SystemCore />
+      <SystemBlueprint />
     </Canvas>
   )
 }
