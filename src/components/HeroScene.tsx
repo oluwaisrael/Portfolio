@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useMemo, useRef, useState } from 'react'
 import type { Group, Mesh } from 'three'
 import {
@@ -80,6 +80,8 @@ function Signal({
 
 function SystemBlueprint({ reducedMotion }: { reducedMotion: boolean }) {
   const group = useRef<Group>(null)
+  const { size } = useThree()
+  const isWideCanvas = size.width >= 720
 
   useFrame((state, delta) => {
     if (!group.current || reducedMotion) return
@@ -90,7 +92,11 @@ function SystemBlueprint({ reducedMotion }: { reducedMotion: boolean }) {
   })
 
   return (
-    <group ref={group} position={[0.88, -0.12, 0]}>
+    <group
+      ref={group}
+      position={isWideCanvas ? [0.74, -0.06, 0] : [0.88, -0.12, 0]}
+      scale={isWideCanvas ? 1.16 : 1}
+    >
       <BlueprintLinks />
       {blueprintModules.map((module) => <BlueprintModule key={module.id} {...module} />)}
       {blueprintLinks.slice(0, 4).map(([from, to], index) => (
