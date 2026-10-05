@@ -103,6 +103,22 @@ img { display: block; max-width: 100%; }
   height: 100% !important;
   opacity: .82;
 }
+.hero-blueprint-label {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #adcbd3;
+  font: 8px var(--mono);
+  opacity: .86;
+}
+.hero-blueprint-label span { color: var(--red); }
+.hero-blueprint-label-ingest { top: 29%; left: 8%; }
+.hero-blueprint-label-api { top: 51%; left: 13%; }
+.hero-blueprint-label-retrieval { top: 35%; right: 9%; }
+.hero-blueprint-label-workers { right: 7%; bottom: 24%; }
+.hero-blueprint-label-product { bottom: 13%; left: 9%; }
 .hero-main-portrait {
   position: absolute;
   z-index: 2;
@@ -229,6 +245,10 @@ h2 em { font-style: normal; color: var(--accent); }
   .assistant-prompts { grid-template-columns: 1fr; }
   .hero-actions { flex-wrap: wrap; }
   .hero-actions .hero-primary-link { flex-basis: 100%; max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .hero-blueprint-label-api, .hero-blueprint-label-workers { display: none; }
 }
 
 @media (min-width: 760px) {
