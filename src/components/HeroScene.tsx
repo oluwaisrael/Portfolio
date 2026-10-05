@@ -53,12 +53,24 @@ function BlueprintModule({ position, scale, accent }: (typeof modules)[number]) 
   )
 }
 
-function Signal({ start, end, offset }: { start: Point; end: Point; offset: number }) {
+function Signal({
+  start,
+  end,
+  offset,
+  reducedMotion,
+}: {
+  start: Point
+  end: Point
+  offset: number
+  reducedMotion: boolean
+}) {
   const signal = useRef<Mesh>(null)
 
   useFrame(({ clock }) => {
     if (!signal.current) return
-    const progress = (clock.getElapsedTime() * 0.18 + offset) % 1
+    const progress = reducedMotion
+      ? offset
+      : (clock.getElapsedTime() * 0.18 + offset) % 1
     signal.current.position.set(
       start[0] + (end[0] - start[0]) * progress,
       start[1] + (end[1] - start[1]) * progress,
@@ -74,11 +86,11 @@ function Signal({ start, end, offset }: { start: Point; end: Point; offset: numb
   )
 }
 
-function SystemBlueprint() {
+function SystemBlueprint({ reducedMotion }: { reducedMotion: boolean }) {
   const group = useRef<Group>(null)
 
   useFrame((state, delta) => {
-    if (!group.current) return
+    if (!group.current || reducedMotion) return
     const targetX = state.pointer.y * 0.12
     const targetY = state.pointer.x * 0.16
     group.current.rotation.x += (targetX - group.current.rotation.x) * delta * 1.7
@@ -90,7 +102,13 @@ function SystemBlueprint() {
       <BlueprintLinks />
       {modules.map((module, index) => <BlueprintModule key={index} {...module} />)}
       {links.slice(0, 4).map(([from, to], index) => (
-        <Signal key={`${from}-${to}`} start={modules[from].position} end={modules[to].position} offset={index * 0.19} />
+        <Signal
+          key={`${from}-${to}`}
+          start={modules[from].position}
+          end={modules[to].position}
+          offset={index * 0.19}
+          reducedMotion={reducedMotion}
+        />
       ))}
     </group>
   )
@@ -102,6 +120,9 @@ export default function HeroScene() {
     const context = canvas.getContext('webgl2') || canvas.getContext('webgl')
     return Boolean(context)
   })
+  const [reducedMotion] = useState(() =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  )
 
   if (!canRender) return null
 
@@ -113,7 +134,7 @@ export default function HeroScene() {
       gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
       aria-hidden="true"
     >
-      <SystemBlueprint />
+      <SystemBlueprint reducedMotion={reducedMotion} />
     </Canvas>
   )
 }
