@@ -46,3 +46,9 @@ export const blueprintModules: BlueprintModule[] = [
 export const blueprintLinks: [number, number][] = [
   [0, 1], [0, 2], [1, 2], [1, 4], [2, 3], [3, 4],
 ]
+
+export const blueprintLabels = blueprintModules.map((module, index) => ({
+  id: module.id,
+  label: module.label,
+  number: String(index + 1).padStart(2, '0'),
+}))
