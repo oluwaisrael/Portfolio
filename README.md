@@ -25,3 +25,15 @@ npm run lint
 - Lucide for interface icons
 
 The hero falls back to a static blueprint on browsers where WebGL is unavailable.
+
+## System blueprint
+
+The hero visual is intentionally tied to the portfolio rather than being a generic 3D effect:
+
+- `PRICE / INGEST` represents data collection and Price Universe.
+- `API LAYER` represents backend services and product infrastructure.
+- `UNIRAG / RAG` represents semantic and lexical retrieval work.
+- `WORKERS` represents asynchronous processing.
+- `LAEL / UI` represents product interfaces and native software experiments.
+
+The active scene uses subtle pointer response and moving signals. It pauses in hidden tabs, respects reduced-motion preferences, and is isolated behind an error boundary.
