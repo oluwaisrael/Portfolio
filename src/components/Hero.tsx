@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { profile } from '../data/profile'
 import { blueprintLabels } from '../data/blueprint'
+import SceneBoundary from './SceneBoundary'
 
 const HeroScene = lazy(() => import('./HeroScene'))
 
@@ -173,9 +174,11 @@ function Hero() {
       <div className="hero-stage">
         <div className="hero-image" aria-label="Portrait of Adeoti Israel">
           <div className="hero-portrait-grid" aria-hidden="true" />
-          <Suspense fallback={null}>
-            <HeroScene />
-          </Suspense>
+          <SceneBoundary>
+            <Suspense fallback={null}>
+              <HeroScene />
+            </Suspense>
+          </SceneBoundary>
           {blueprintLabels.map((item) => (
             <div
               className={`hero-blueprint-label hero-blueprint-label-${item.id}`}
