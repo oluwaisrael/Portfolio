@@ -176,19 +176,19 @@ function Hero() {
             <HeroScene />
           </Suspense>
           <div className="hero-blueprint-label hero-blueprint-label-ingest" aria-hidden="true">
-            <span>01</span> INGEST
+            <span>01</span> PRICE / INGEST
           </div>
           <div className="hero-blueprint-label hero-blueprint-label-api" aria-hidden="true">
-            <span>02</span> API
+            <span>02</span> API LAYER
           </div>
           <div className="hero-blueprint-label hero-blueprint-label-retrieval" aria-hidden="true">
-            <span>03</span> RETRIEVAL
+            <span>03</span> UNIRAG / RAG
           </div>
           <div className="hero-blueprint-label hero-blueprint-label-workers" aria-hidden="true">
             <span>04</span> WORKERS
           </div>
           <div className="hero-blueprint-label hero-blueprint-label-product" aria-hidden="true">
-            <span>05</span> PRODUCT
+            <span>05</span> LAEL / UI
           </div>
           <div className="hero-portrait-mark hero-portrait-mark-top" aria-hidden="true">01</div>
           <div className="hero-portrait-mark hero-portrait-mark-bottom" aria-hidden="true">LAGOS / NG</div>
