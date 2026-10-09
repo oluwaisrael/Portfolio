@@ -10,6 +10,29 @@ import {
 import { useDocumentVisibility } from '../hooks/useDocumentVisibility'
 import BlueprintFallback from './BlueprintFallback'
 
+export type SceneMode =
+  | 'hero'
+  | 'identity'
+  | 'priceuniverse'
+  | 'unirag'
+  | 'neural-network'
+  | 'roam'
+  | 'lael'
+  | 'ask'
+  | 'contact'
+
+const modeOffsets: Record<SceneMode, [number, number, number]> = {
+  hero: [0, 0, 0],
+  identity: [0, 0.12, 0],
+  priceuniverse: [-0.14, 0, 0.08],
+  unirag: [0.04, 0.14, 0.1],
+  'neural-network': [0, -0.12, 0.12],
+  roam: [0.12, 0, 0.06],
+  lael: [0.08, -0.08, 0.18],
+  ask: [0, 0.04, 0.24],
+  contact: [0, -0.18, 0.32],
+}
+
 function BlueprintLinks() {
   const positions = useMemo(() => new Float32Array(blueprintLinks.flatMap(([from, to]) => [
     ...blueprintModules[from].position,
@@ -80,10 +103,11 @@ function Signal({
   )
 }
 
-function SystemBlueprint({ reducedMotion }: { reducedMotion: boolean }) {
+function SystemBlueprint({ reducedMotion, sceneMode }: { reducedMotion: boolean; sceneMode: SceneMode }) {
   const group = useRef<Group>(null)
   const { size } = useThree()
   const isWideCanvas = size.width >= 720
+  const offset = modeOffsets[sceneMode]
 
   useFrame((state, delta) => {
     if (!group.current || reducedMotion) return
@@ -96,7 +120,7 @@ function SystemBlueprint({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <group
       ref={group}
-      position={isWideCanvas ? [0.74, -0.06, 0] : [0.88, -0.12, 0]}
+      position={isWideCanvas ? [0.74 + offset[0], -0.06 + offset[1], offset[2]] : [0.88 + offset[0], -0.12 + offset[1], offset[2]]}
       scale={isWideCanvas ? 1.16 : 1}
     >
       <BlueprintLinks />
@@ -114,7 +138,7 @@ function SystemBlueprint({ reducedMotion }: { reducedMotion: boolean }) {
   )
 }
 
-export default function HeroScene() {
+export default function HeroScene({ sceneMode = 'hero' }: { sceneMode?: SceneMode }) {
   const isDocumentVisible = useDocumentVisibility()
   const [canRender] = useState(() => {
     const canvas = document.createElement('canvas')
@@ -131,12 +155,12 @@ export default function HeroScene() {
     <Canvas
       className="hero-canvas"
       camera={{ fov: 42, position: [0, 0, 5.2]}}
-      dpr={[1, 1.5]}
+      dpr={window.matchMedia('(pointer: coarse)').matches ? [1, 1] : [1, 1.35]}
       frameloop={isDocumentVisible ? 'always' : 'never'}
       gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
       aria-hidden="true"
     >
-      <SystemBlueprint reducedMotion={reducedMotion} />
+      <SystemBlueprint reducedMotion={reducedMotion} sceneMode={sceneMode} />
     </Canvas>
   )
 }

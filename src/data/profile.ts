@@ -84,5 +84,13 @@ export const profile = {
         'Qwen',
       ],
     },
+    {
+      name: 'Roam',
+      summary:
+        'A natural-language decision engine for choosing real places around practical constraints like budget, distance, hours, Wi-Fi, and quietness.',
+      detail:
+        'Roam explores how structured constraints and natural language can work together to make everyday decisions easier to reason about.',
+      stack: ['Python', 'Natural Language', 'Data', 'Decision Systems'],
+    },
   ],
 }

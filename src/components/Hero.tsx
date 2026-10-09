@@ -12,6 +12,7 @@ import {
 import { profile } from '../data/profile'
 import { blueprintLabels } from '../data/blueprint'
 import SceneBoundary from './SceneBoundary'
+import type { SceneMode } from './HeroScene'
 
 const HeroScene = lazy(() => import('./HeroScene'))
 
@@ -151,9 +152,10 @@ function getAssistantAnswer(question: string) {
   return `Good question. Based on what I know, ${profile.displayName} is strongest around full-stack work, backend/API design, data, and retrieval-based products. Ask about Price Universe, UniRAG, Lael, availability, or contact.`
 }
 
-function Hero() {
+function Hero({ sceneMode }: { sceneMode: SceneMode }) {
   const [assistantQuestion, setAssistantQuestion] = useState('')
   const [assistantOpen, setAssistantOpen] = useState(false)
+  const [assistantSceneMode, setAssistantSceneMode] = useState<SceneMode | null>(null)
   const [assistantAnswer, setAssistantAnswer] = useState(
     `Hi, I’m ${profile.displayName}’s assistant. Ask me about his work, projects, journey or contact details.`,
   )
@@ -166,17 +168,27 @@ function Hero() {
     }
 
     setAssistantAnswer(getAssistantAnswer(cleanQuestion))
+    const questionValue = cleanQuestion.toLowerCase()
+    setAssistantSceneMode(
+      questionValue.includes('unirag') || questionValue.includes('rag')
+        ? 'unirag'
+        : questionValue.includes('price')
+          ? 'priceuniverse'
+          : questionValue.includes('lael')
+            ? 'lael'
+            : 'ask',
+    )
     setAssistantQuestion('')
   }
 
   return (
-    <section className="hero">
+    <section className="hero" data-scene-mode="hero">
       <div className="hero-stage">
         <div className="hero-image" aria-label="Portrait of Adeoti Israel">
           <div className="hero-portrait-grid" aria-hidden="true" />
           <SceneBoundary>
             <Suspense fallback={null}>
-              <HeroScene />
+            <HeroScene sceneMode={assistantOpen ? assistantSceneMode ?? 'ask' : sceneMode} />
             </Suspense>
           </SceneBoundary>
           {blueprintLabels.map((item) => (
@@ -200,7 +212,7 @@ function Hero() {
 
         <div className="hero-content">
           <div className="hero-title">
-            <span className="hero-kicker">ADEOTI ISRAEL / SOFTWARE ENGINEER</span>
+          <span className="hero-kicker">STATISTICS × ENGINEERING × AI/ML</span>
 
             <h1>DERIN<span>.</span></h1>
 
@@ -211,13 +223,12 @@ function Hero() {
 
           <div className="hero-summary">
             <p className="hero-lede">
-              I build useful things.
+              I build useful systems.
             </p>
 
             <p className="hero-copy">
-              A Statistics student at the University of Lagos
-              building dependable software, from product APIs
-              to retrieval systems and data tools.
+              A Statistics student at the University of Lagos building
+              backend systems, AI/ML tools and interactive digital spaces.
             </p>
 
             <div className="hero-actions">
@@ -265,7 +276,7 @@ function Hero() {
             onClick={() => setAssistantOpen((open) => !open)}
           >
             <MessageCircle size={17} />
-            <span>Ask about Derin</span>
+            <span>Ask Derin</span>
             <ChevronDown size={17} />
           </button>
           <div className="assistant-body" id="assistant-body">

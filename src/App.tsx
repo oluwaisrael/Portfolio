@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ArrowUpRight, Menu, X } from 'lucide-react'
+import { ArrowUpRight, Menu, Moon, Sun, X } from 'lucide-react'
 import Hero from './components/Hero'
+import type { SceneMode } from './components/HeroScene'
 
 const navItems = [
   { label: 'Home', href: '#' },
@@ -59,6 +60,14 @@ const supportingProjects = [
       'A small system with a very clear job. A REST service for generating short links, resolving redirects and recording usage data, backed by PostgreSQL.',
     stack: ['FastAPI', 'PostgreSQL', 'REST API'],
   },
+  {
+    number: '10',
+    title: 'Roam',
+    category: 'DECISION SYSTEM',
+    description:
+      'A natural-language real-place decision engine that weighs budget, distance, opening hours, Wi-Fi, quietness and other practical preferences.',
+    stack: ['Python', 'Natural Language', 'Data', 'Decision Systems'],
+  },
 ]
 
 function ProjectVideo({
@@ -92,6 +101,16 @@ function ProjectVideo({
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = window.localStorage.getItem('derin-theme')
+    return saved === 'light' ? 'light' : 'dark'
+  })
+  const [sceneMode, setSceneMode] = useState<SceneMode>('hero')
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    window.localStorage.setItem('derin-theme', theme)
+  }, [theme])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -107,6 +126,25 @@ function App() {
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
+  }, [])
+
+  useEffect(() => {
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-scene-mode]'),
+    )
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+        if (visible) {
+          setSceneMode(visible.target.getAttribute('data-scene-mode') as SceneMode)
+        }
+      },
+      { threshold: [0.18, 0.45, 0.72], rootMargin: '-18% 0px -30% 0px' },
+    )
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
   }, [])
 
   const closeMenu = () => setMenuOpen(false)
@@ -147,6 +185,15 @@ function App() {
           </span>
 
           <button
+            className="theme-button"
+            type="button"
+            aria-label={`Use ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            onClick={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')}
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
+          <button
             className="menu-button"
             type="button"
             aria-label={
@@ -166,13 +213,13 @@ function App() {
       </header>
 
       <main>
-        <Hero />
+        <Hero sceneMode={sceneMode} />
 
         {/* -------------------------------------------------
             SELECTED WORK
         -------------------------------------------------- */}
 
-        <section className="work-section" id="work">
+        <section className="work-section" id="work" data-scene-mode="priceuniverse">
           <div className="section-meta">
             <span>01</span>
             <span>Selected work</span>
@@ -499,6 +546,7 @@ function App() {
         <section
           className="systems-section"
           id="systems"
+          data-scene-mode="neural-network"
         >
           <div className="section-meta">
             <span>02</span>
@@ -559,6 +607,7 @@ function App() {
         <section
           className="about-section"
           id="about"
+          data-scene-mode="identity"
         >
           <div className="section-meta">
             <span>03</span>
@@ -619,6 +668,7 @@ function App() {
         <section
           className="contact-section"
           id="contact"
+          data-scene-mode="contact"
         >
           <div className="section-meta">
             <span>04</span>
