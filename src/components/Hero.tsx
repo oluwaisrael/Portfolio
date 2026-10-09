@@ -366,6 +366,14 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
           <ArrowUpRight size={16} />
         </a>
       </div>
+
+      <div className="hero-progress" aria-label="Page sections">
+        {['Hero', 'About', 'Projects', 'Ask', 'Contact'].map((label, index) => (
+          <a href={index === 0 ? '#top' : index === 1 ? '#about' : index === 2 ? '#work' : index === 3 ? '#ask' : '#contact'} key={label}>
+            <span>0{index + 1}</span>{label}
+          </a>
+        ))}
+      </div>
     </section>
   )
 }

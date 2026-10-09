@@ -25,6 +25,11 @@
 .hero-location { display:inline-flex; align-items:center; gap:7px; }
 .hero-location i { width:6px; height:6px; display:inline-block; border-radius:50%; background:var(--accent); box-shadow:0 0 12px color-mix(in srgb,var(--accent) 75%,transparent); }
 .mobile-dock { display:none; }
+.hero-progress { position:absolute; z-index:7; right:50%; bottom:23px; display:flex; gap:24px; transform:translateX(50%); }
+.hero-progress a { display:grid; gap:6px; min-width:43px; color:var(--quiet); font:8px var(--mono); text-align:center; text-transform:uppercase; }
+.hero-progress a:first-child { color:var(--ink); }
+.hero-progress a:first-child::after { content:''; height:2px; margin-top:2px; background:var(--ink); }
+.hero-progress span { color:var(--accent); font-size:8px; }
 .editorial-overview { display:grid; grid-template-columns:1fr 1.25fr 1fr; max-width:1500px; margin:0 auto; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--surface); }
 .overview-panel { min-height:360px; padding:24px clamp(18px,3vw,42px) 30px; border-right:1px solid var(--line); }
 .overview-panel:last-child { border-right:0; }
@@ -54,6 +59,7 @@
   .overview-panel h2 { margin-top:34px; font-size:42px; }
   .overview-index { margin-top:28px; }
   .hero-ambient { position:static; display:none; }
+  .hero-progress { display:none; }
   .hero-name { margin:16px 0 0; font-size:25px; }
   .hero-actions { flex-wrap:wrap; }
   .hero-actions .hero-primary-link, .hero-actions .hero-ask-link { flex:1 1 auto; }
