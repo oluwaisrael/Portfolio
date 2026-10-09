@@ -215,6 +215,32 @@ function App() {
       <main>
         <Hero sceneMode={sceneMode} />
 
+        <section className="editorial-overview" data-scene-mode="identity" aria-label="Portfolio overview">
+          <article className="overview-panel overview-about">
+            <div className="overview-panel-heading"><span>02</span><span>About / System</span></div>
+            <h2>Four<br /><em>perspectives.</em></h2>
+            <p>Statistics, engineering, AI/ML and creative technology — all part of the same system.</p>
+            <a className="overview-link" href="#about">Explore <ArrowUpRight size={14} /></a>
+          </article>
+
+          <article className="overview-panel overview-projects">
+            <div className="overview-panel-heading"><span>03</span><span>Projects</span></div>
+            <h2>Real systems.<br /><em>Real learning.</em></h2>
+            <div className="overview-index">
+              {['PriceUniverse', 'UniRAG', 'Neural Network', 'Roam', 'Lael'].map((project, index) => (
+                <a href="#work" key={project}><span>0{index + 1}</span>{project}<ArrowUpRight size={13} /></a>
+              ))}
+            </div>
+          </article>
+
+          <article className="overview-panel overview-ask">
+            <div className="overview-panel-heading"><span>04</span><span>Ask Derin</span></div>
+            <h2>A more<br /><em>interactive way</em><br />to know my work.</h2>
+            <p>Ask about my work, stack or current focus.</p>
+            <a className="overview-link" href="#ask">Open Ask Derin <ArrowUpRight size={14} /></a>
+          </article>
+        </section>
+
         {/* -------------------------------------------------
             SELECTED WORK
         -------------------------------------------------- */}
@@ -722,6 +748,13 @@ function App() {
           </div>
         </section>
       </main>
+
+      <nav className="mobile-dock" aria-label="Mobile navigation">
+        <a href="#top">Home</a>
+        <a href="#work">Work</a>
+        <a href="#ask">Ask</a>
+        <a href="#contact">Contact</a>
+      </nav>
 
       <footer className="site-footer">
         <span>© 2026 ADEOTI ISRAEL</span>

@@ -1,166 +1,169 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useMemo, useRef, useState } from 'react'
-import type { Group, Mesh } from 'three'
-import {
-  blueprintLinks,
-  blueprintModules,
-  type BlueprintModule,
-  type BlueprintPoint,
-} from '../data/blueprint'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import * as THREE from 'three'
+import type { Group, LineBasicMaterial, Points as ThreePoints } from 'three'
 import { useDocumentVisibility } from '../hooks/useDocumentVisibility'
 import BlueprintFallback from './BlueprintFallback'
 
 export type SceneMode =
-  | 'hero'
-  | 'identity'
-  | 'priceuniverse'
-  | 'unirag'
-  | 'neural-network'
-  | 'roam'
-  | 'lael'
-  | 'ask'
-  | 'contact'
+  | 'hero' | 'identity' | 'priceuniverse' | 'unirag' | 'neural-network'
+  | 'roam' | 'lael' | 'ask' | 'contact'
 
-const modeOffsets: Record<SceneMode, [number, number, number]> = {
-  hero: [0, 0, 0],
-  identity: [0, 0.12, 0],
-  priceuniverse: [-0.14, 0, 0.08],
-  unirag: [0.04, 0.14, 0.1],
-  'neural-network': [0, -0.12, 0.12],
-  roam: [0.12, 0, 0.06],
-  lael: [0.08, -0.08, 0.18],
-  ask: [0, 0.04, 0.24],
-  contact: [0, -0.18, 0.32],
+type ThemeMode = 'dark' | 'light'
+
+const modeShift: Record<SceneMode, [number, number, number]> = {
+  hero: [0, 0, 0], identity: [0, .1, 0], priceuniverse: [-.1, 0, .06],
+  unirag: [.05, .12, .08], 'neural-network': [0, -.08, .1], roam: [.1, 0, .05],
+  lael: [.08, -.08, .16], ask: [0, .02, .2], contact: [0, -.16, .28],
 }
 
-function BlueprintLinks() {
-  const positions = useMemo(() => new Float32Array(blueprintLinks.flatMap(([from, to]) => [
-    ...blueprintModules[from].position,
-    ...blueprintModules[to].position,
-  ])), [])
+function useSceneTheme(): ThemeMode {
+  const [theme, setTheme] = useState<ThemeMode>(() =>
+    document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+  )
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark')
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => observer.disconnect()
+  }, [])
+
+  return theme
+}
+
+function ParticleField({ reducedMotion, theme, sceneMode }: { reducedMotion: boolean; theme: ThemeMode; sceneMode: SceneMode }) {
+  const points = useRef<ThreePoints>(null)
+  const isCoarse = useThree((state) => state.size.width < 600)
+  const count = isCoarse ? 1150 : 3200
+  const shift = modeShift[sceneMode]
+  const positions = useMemo(() => {
+    const values = new Float32Array(count * 3)
+    let seed = 17
+    const random = () => {
+      seed = (seed * 9301 + 49297) % 233280
+      return seed / 233280
+    }
+    for (let index = 0; index < count; index += 1) {
+      const angle = random() * Math.PI * 2
+      const radius = Math.pow(random(), .62) * 2.35
+      const vertical = (random() - .5) * 2.6
+      const i = index * 3
+      values[i] = Math.cos(angle) * radius + shift[0]
+      values[i + 1] = Math.sin(angle) * radius * .72 + vertical * .38 + shift[1]
+      values[i + 2] = (random() - .5) * 1.8 + shift[2]
+    }
+    return values
+  }, [count, shift])
+
+  useFrame(({ clock, pointer }) => {
+    if (!points.current || reducedMotion) return
+    points.current.rotation.y += .0009
+    points.current.rotation.x += (pointer.y * .04 - points.current.rotation.x) * .018
+    points.current.position.x += (pointer.x * .08 - points.current.position.x) * .02
+    const material = points.current.material as THREE.PointsMaterial
+    material.opacity = .42 + Math.sin(clock.getElapsedTime() * .35) * .035
+  })
 
   return (
-    <lineSegments>
+    <points ref={points} position={[0, 0, -0.2]}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <lineBasicMaterial color="#6fb5c0" transparent opacity={0.42} />
-    </lineSegments>
+      <pointsMaterial
+        color={theme === 'light' ? '#3b8cff' : '#a7c8d4'}
+        size={isCoarse ? .018 : .022}
+        transparent
+        opacity={theme === 'light' ? .22 : .46}
+        depthWrite={false}
+        sizeAttenuation
+      />
+    </points>
   )
 }
 
-function BlueprintModule({ position, scale, accent }: BlueprintModule) {
-  const color = accent ? '#d9797c' : '#85cbd4'
+function OrbitPaths({ theme }: { theme: ThemeMode }) {
+  const material = useRef<LineBasicMaterial>(null)
+  const geometry = useMemo(() => {
+    const curves = [
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2.6, -.8, -.5), new THREE.Vector3(-.8, .28, .4),
+        new THREE.Vector3(.8, -.55, .25), new THREE.Vector3(2.7, .8, -.1),
+      ]),
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2.5, .8, .1), new THREE.Vector3(-.4, 1.05, -.2),
+        new THREE.Vector3(1.1, .25, .6), new THREE.Vector3(2.55, -.75, .1),
+      ]),
+    ]
+    return curves.map((curve) => curve.getPoints(70).flatMap((point) => [point.x, point.y, point.z]))
+  }, [])
 
+  return <>
+    {geometry.map((positions, index) => (
+      <line key={index}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[new Float32Array(positions), 3]} />
+        </bufferGeometry>
+        <lineBasicMaterial ref={index === 0 ? material : undefined} color={index === 0 ? '#3b8cff' : theme === 'light' ? '#89979c' : '#677d88'} transparent opacity={index === 0 ? .55 : .22} />
+      </line>
+    ))}
+  </>
+}
+
+function DataGlobe({ theme }: { theme: ThemeMode }) {
+  const group = useRef<Group>(null)
+  useFrame((_, delta) => { if (group.current) group.current.rotation.y += delta * .035 })
   return (
-    <group position={position}>
+    <group ref={group} position={[1.98, .3, -.15]} scale={.6}>
       <mesh>
-        <boxGeometry args={scale} />
-        <meshBasicMaterial color="#10243a" transparent opacity={0.76} />
+        <sphereGeometry args={[1, 20, 14]} />
+        <meshBasicMaterial color={theme === 'light' ? '#b6c1c1' : '#41616c'} wireframe transparent opacity={theme === 'light' ? .22 : .28} />
       </mesh>
-      <mesh>
-        <boxGeometry args={[scale[0] + 0.06, scale[1] + 0.06, scale[2] + 0.04]} />
-        <meshBasicMaterial color={color} wireframe transparent opacity={0.72} />
-      </mesh>
-      <mesh position={[0, 0, scale[2] + 0.06]}>
-        <boxGeometry args={[0.07, 0.07, 0.04]} />
-        <meshBasicMaterial color={color} />
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.18, .008, 4, 64]} />
+        <meshBasicMaterial color="#3b8cff" transparent opacity={.5} />
       </mesh>
     </group>
   )
 }
 
-function Signal({
-  start,
-  end,
-  offset,
-  reducedMotion,
-}: {
-  start: BlueprintPoint
-  end: BlueprintPoint
-  offset: number
-  reducedMotion: boolean
-}) {
-  const signal = useRef<Mesh>(null)
-
-  useFrame(({ clock }) => {
-    if (!signal.current) return
-    const progress = reducedMotion
-      ? offset
-      : (clock.getElapsedTime() * 0.18 + offset) % 1
-    signal.current.position.set(
-      start[0] + (end[0] - start[0]) * progress,
-      start[1] + (end[1] - start[1]) * progress,
-      0.16,
-    )
-  })
-
-  return (
-    <mesh ref={signal}>
-      <sphereGeometry args={[0.045, 10, 10]} />
-      <meshBasicMaterial color="#d9797c" />
-    </mesh>
-  )
-}
-
-function SystemBlueprint({ reducedMotion, sceneMode }: { reducedMotion: boolean; sceneMode: SceneMode }) {
+function SystemBlueprint({ reducedMotion, theme, sceneMode }: { reducedMotion: boolean; theme: ThemeMode; sceneMode: SceneMode }) {
   const group = useRef<Group>(null)
-  const { size } = useThree()
-  const isWideCanvas = size.width >= 720
-  const offset = modeOffsets[sceneMode]
-
-  useFrame((state, delta) => {
+  const shift = modeShift[sceneMode]
+  useFrame(({ pointer }, delta) => {
     if (!group.current || reducedMotion) return
-    const targetX = state.pointer.y * 0.12
-    const targetY = state.pointer.x * 0.16
-    group.current.rotation.x += (targetX - group.current.rotation.x) * delta * 1.7
-    group.current.rotation.y += (targetY - group.current.rotation.y) * delta * 1.7
+    group.current.rotation.x += (pointer.y * .06 - group.current.rotation.x) * delta
+    group.current.rotation.y += (pointer.x * .08 - group.current.rotation.y) * delta
   })
-
   return (
-    <group
-      ref={group}
-      position={isWideCanvas ? [0.74 + offset[0], -0.06 + offset[1], offset[2]] : [0.88 + offset[0], -0.12 + offset[1], offset[2]]}
-      scale={isWideCanvas ? 1.16 : 1}
-    >
-      <BlueprintLinks />
-      {blueprintModules.map((module) => <BlueprintModule key={module.id} {...module} />)}
-      {blueprintLinks.slice(0, 4).map(([from, to], index) => (
-        <Signal
-          key={`${from}-${to}`}
-          start={blueprintModules[from].position}
-          end={blueprintModules[to].position}
-          offset={index * 0.19}
-          reducedMotion={reducedMotion}
-        />
-      ))}
+    <group ref={group} position={[shift[0], shift[1], shift[2]]}>
+      <ParticleField reducedMotion={reducedMotion} theme={theme} sceneMode={sceneMode} />
+      <OrbitPaths theme={theme} />
+      <DataGlobe theme={theme} />
     </group>
   )
 }
 
 export default function HeroScene({ sceneMode = 'hero' }: { sceneMode?: SceneMode }) {
-  const isDocumentVisible = useDocumentVisibility()
+  const visible = useDocumentVisibility()
+  const theme = useSceneTheme()
   const [canRender] = useState(() => {
     const canvas = document.createElement('canvas')
-    const context = canvas.getContext('webgl2') || canvas.getContext('webgl')
-    return Boolean(context)
+    return Boolean(canvas.getContext('webgl2') || canvas.getContext('webgl'))
   })
-  const [reducedMotion] = useState(() =>
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  )
-
+  const [reducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   if (!canRender) return <BlueprintFallback />
-
   return (
     <Canvas
       className="hero-canvas"
-      camera={{ fov: 42, position: [0, 0, 5.2]}}
-      dpr={window.matchMedia('(pointer: coarse)').matches ? [1, 1] : [1, 1.35]}
-      frameloop={isDocumentVisible ? 'always' : 'never'}
+      camera={{ fov: 42, position: [0, 0, 5.2] }}
+      dpr={window.matchMedia('(pointer: coarse)').matches ? 1 : [1, 1.35]}
+      frameloop={visible ? 'always' : 'never'}
       gl={{ alpha: true, antialias: true, powerPreference: 'low-power' }}
       aria-hidden="true"
     >
-      <SystemBlueprint reducedMotion={reducedMotion} sceneMode={sceneMode} />
+      <SystemBlueprint reducedMotion={reducedMotion} theme={theme} sceneMode={sceneMode} />
     </Canvas>
   )
 }

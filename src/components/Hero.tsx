@@ -182,7 +182,18 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
   }
 
   return (
-    <section className="hero" data-scene-mode="hero">
+    <section id="top" className="hero" data-scene-mode="hero">
+      <div className="hero-ambient hero-ambient-left" aria-hidden="true">
+        <span>LAGOS</span>
+        <span>7.3775° N</span>
+        <span>3.9470° E</span>
+      </div>
+      <div className="hero-ambient hero-ambient-right" aria-hidden="true">
+        <span>IDEAS</span>
+        <span>SYSTEMS</span>
+        <span>DATA</span>
+        <span>BETTER TOOLS</span>
+      </div>
       <div className="hero-stage">
         <div className="hero-image" aria-label="Portrait of Adeoti Israel">
           <div className="hero-portrait-grid" aria-hidden="true" />
@@ -214,7 +225,9 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
           <div className="hero-title">
           <span className="hero-kicker">STATISTICS × ENGINEERING × AI/ML</span>
 
-            <h1>DERIN<span>.</span></h1>
+          <h1>DERIN<span>.</span></h1>
+
+          <span className="hero-name">Adeoti Israel</span>
 
             <span className="hero-title-small">
               BACKEND SYSTEMS / DATA / APPLIED AI
@@ -233,8 +246,11 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
 
             <div className="hero-actions">
               <a className="hero-primary-link" href="#work">
-                See my work
+                View work
                 <ArrowUpRight size={16} />
+              </a>
+              <a className="hero-ask-link" href="#ask">
+                Ask Derin
               </a>
               <a
                 href="https://github.com/oluwaisrael"
@@ -267,7 +283,7 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
           </div>
         </div>
 
-        <aside className={`hero-assistant ${assistantOpen ? 'is-open' : ''}`}>
+        <aside id="ask" className={`hero-assistant ${assistantOpen ? 'is-open' : ''}`}>
           <button
             className="assistant-toggle"
             type="button"
@@ -332,13 +348,13 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
       </div>
 
       <div className="hero-bottom">
-        <span className="hero-location">LAGOS, NIGERIA</span>
+        <span className="hero-location"><i /> LAGOS, NG</span>
 
         <a
           className="hero-scroll"
           href="#work"
         >
-          <span>EXPLORE WORK</span>
+          <span>SCROLL TO EXPLORE</span>
           <ArrowDown size={16} />
         </a>
 
