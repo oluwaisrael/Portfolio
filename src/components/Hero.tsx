@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react'
+import { useState } from 'react'
 import {
   ArrowDown,
   ArrowUpRight,
@@ -11,10 +11,6 @@ import {
 } from 'lucide-react'
 import { profile } from '../data/profile'
 import { blueprintLabels } from '../data/blueprint'
-import SceneBoundary from './SceneBoundary'
-import type { SceneMode } from './HeroScene'
-
-const HeroScene = lazy(() => import('./HeroScene'))
 
 const assistantPrompts = [
   'What does Israel build?',
@@ -152,10 +148,9 @@ function getAssistantAnswer(question: string) {
   return `Good question. Based on what I know, ${profile.displayName} is strongest around full-stack work, backend/API design, data, and retrieval-based products. Ask about Price Universe, UniRAG, Lael, availability, or contact.`
 }
 
-function Hero({ sceneMode }: { sceneMode: SceneMode }) {
+function Hero() {
   const [assistantQuestion, setAssistantQuestion] = useState('')
   const [assistantOpen, setAssistantOpen] = useState(false)
-  const [assistantSceneMode, setAssistantSceneMode] = useState<SceneMode | null>(null)
   const [assistantAnswer, setAssistantAnswer] = useState(
     `Hi, I’m ${profile.displayName}’s assistant. Ask me about his work, projects, journey or contact details.`,
   )
@@ -168,16 +163,6 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
     }
 
     setAssistantAnswer(getAssistantAnswer(cleanQuestion))
-    const questionValue = cleanQuestion.toLowerCase()
-    setAssistantSceneMode(
-      questionValue.includes('unirag') || questionValue.includes('rag')
-        ? 'unirag'
-        : questionValue.includes('price')
-          ? 'priceuniverse'
-          : questionValue.includes('lael')
-            ? 'lael'
-            : 'ask',
-    )
     setAssistantQuestion('')
   }
 
@@ -204,11 +189,6 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
       <div className="hero-stage">
         <div className="hero-image" aria-label="Portrait of Adeoti Israel">
           <div className="hero-portrait-grid" aria-hidden="true" />
-          <SceneBoundary>
-            <Suspense fallback={null}>
-            <HeroScene sceneMode={assistantOpen ? assistantSceneMode ?? 'ask' : sceneMode} />
-            </Suspense>
-          </SceneBoundary>
           {blueprintLabels.map((item) => (
             <div
               className={`hero-blueprint-label hero-blueprint-label-${item.id}`}

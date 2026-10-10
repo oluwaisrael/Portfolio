@@ -145,7 +145,7 @@ function SystemBlueprint({ reducedMotion, theme, sceneMode }: { reducedMotion: b
   )
 }
 
-export default function HeroScene({ sceneMode = 'hero' }: { sceneMode?: SceneMode }) {
+export default function HeroScene({ sceneMode = 'hero', fullScreen = false }: { sceneMode?: SceneMode; fullScreen?: boolean }) {
   const visible = useDocumentVisibility()
   const theme = useSceneTheme()
   const [canRender] = useState(() => {
@@ -156,7 +156,7 @@ export default function HeroScene({ sceneMode = 'hero' }: { sceneMode?: SceneMod
   if (!canRender) return <BlueprintFallback />
   return (
     <Canvas
-      className="hero-canvas"
+      className={fullScreen ? 'experience-canvas' : 'hero-canvas'}
       camera={{ fov: 42, position: [0, 0, 5.2] }}
       dpr={window.matchMedia('(pointer: coarse)').matches ? 1 : [1, 1.35]}
       frameloop={visible ? 'always' : 'never'}

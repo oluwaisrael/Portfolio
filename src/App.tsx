@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, Menu, Moon, Sun, X } from 'lucide-react'
 import Hero from './components/Hero'
+import ExperienceCanvas from './components/ExperienceCanvas'
 import type { SceneMode } from './components/HeroScene'
 
 const navItems = [
@@ -213,7 +214,8 @@ function App() {
       </header>
 
       <main>
-        <Hero sceneMode={sceneMode} />
+        <ExperienceCanvas sceneMode={sceneMode} />
+        <Hero />
 
         <section className="editorial-overview" data-scene-mode="identity" aria-label="Portfolio overview">
           <article className="overview-panel overview-about">
