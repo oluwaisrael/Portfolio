@@ -194,6 +194,13 @@ function Hero({ sceneMode }: { sceneMode: SceneMode }) {
         <span>DATA</span>
         <span>BETTER TOOLS</span>
       </div>
+      <div className="hero-exploring" aria-label="Currently exploring">
+        <span>Currently Exploring</span>
+        <strong><i /> AI Systems</strong>
+        <span>RAG &amp; Knowledge</span>
+        <span>Backend Infrastructure</span>
+        <span>Creative Tech</span>
+      </div>
       <div className="hero-stage">
         <div className="hero-image" aria-label="Portrait of Adeoti Israel">
           <div className="hero-portrait-grid" aria-hidden="true" />

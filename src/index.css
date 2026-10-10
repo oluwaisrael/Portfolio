@@ -72,3 +72,23 @@
   .mobile-dock a:hover, .mobile-dock a:focus-visible { color:var(--accent); }
   .site-footer { padding-bottom:92px; }
 }
+
+/* Final reference shell: the page reads as one framed exhibition, not a loose stack. */
+.site { max-width:1500px; margin:24px auto 0; padding:0 12px; }
+.nav { position:absolute; top:24px; left:50%; width:calc(100% - 48px); max-width:1476px; height:58px; transform:translateX(-50%); border:0; background:transparent; backdrop-filter:none; }
+.hero { position:relative; min-height:calc(100svh - 48px); margin:0; padding-top:58px; border:1px solid var(--line); border-radius:9px; overflow:hidden; }
+.hero-image { border:0; background:transparent; }
+.hero-image::after { background:linear-gradient(180deg,transparent 56%,color-mix(in srgb,var(--bg) 72%,transparent)); }
+.hero-exploring { position:absolute; z-index:7; right:3.2%; bottom:15%; display:grid; gap:7px; color:var(--muted); font:10px var(--mono); letter-spacing:.04em; }
+.hero-exploring span:first-child { margin-bottom:3px; color:var(--quiet); }
+.hero-exploring strong { display:flex; align-items:center; gap:7px; color:var(--ink); font:400 10px var(--mono); }
+.hero-exploring i { width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent); }
+.editorial-overview { border-radius:9px; overflow:hidden; }
+
+@media (max-width:759px) {
+  .site { margin:0; padding:0; }
+  .nav { top:0; width:100%; height:62px; padding-inline:18px; }
+  .hero { min-height:100svh; border-radius:0; border-top:0; padding-top:62px; }
+  .hero-exploring { display:none; }
+  .editorial-overview { border-radius:0; }
+}
