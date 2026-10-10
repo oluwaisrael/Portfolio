@@ -47,6 +47,9 @@
 .overview-index a svg { margin-left:auto; color:var(--quiet); }
 
 @media (min-width:760px) {
+  .hero-stage { min-height:650px; grid-template-columns:1fr minmax(440px,1.45fr) 1fr; }
+  .hero-image { width:min(100%,720px); height:min(75vh,700px); min-height:500px; margin-top:2vh; }
+  .hero-main-portrait { width:94%; filter:grayscale(1) saturate(.1) contrast(1.08) brightness(.92); }
   .hero-summary { max-width:280px; }
   .hero-assistant { left:auto; right:0; bottom:6vh; }
   .work-section, .systems-section, .about-section, .contact-section { max-width:1500px; margin-inline:auto; }
